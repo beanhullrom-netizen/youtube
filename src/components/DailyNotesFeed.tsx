@@ -287,6 +287,10 @@ export const DailyNotesFeed: React.FC<DailyNotesFeedProps> = ({
                       <span className="flex items-center gap-1 text-blue-400 font-semibold shrink-0">
                         <Video className="w-3 h-3" /> 롱폼
                       </span>
+                    ) : record.uploadedVideoType === 'both' ? (
+                      <span className="flex items-center gap-1 text-purple-400 font-semibold shrink-0">
+                        <Film className="w-3 h-3" /> 쇼츠+롱폼
+                      </span>
                     ) : null}
                     {record.uploadedVideoTitle && (
                       <span className="text-zinc-300 truncate" title={record.uploadedVideoTitle}>

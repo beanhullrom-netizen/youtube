@@ -5,6 +5,7 @@ export interface DailyRecord {
   yesterdaySubs: number;  // 어제 구독자 수
   subsGained: number;     // 늘어난 구독자 수 (todaySubs - yesterdaySubs)
   views: number;          // 오늘 하루 전체 조회수
+  conversionRate: number; // 구독 전환율 (구독 순증 / 조회수 * 100, %)
   note: string;           // 그날의 한마디 일지
   emotion?: string;       // 오늘 나의 감정 (예: '🔥 열정', '😊 뿌듯', '🤔 고민', '😰 슬럼프', '😴 지침', '🎉 대박')
   uploadedVideoTitle?: string; // 오늘 업로드한 영상 제목 (옵션)

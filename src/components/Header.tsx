@@ -26,6 +26,7 @@ interface HeaderProps {
   onResetSampleData: () => void;
   onSyncYouTube: () => void;
   isSyncingYouTube?: boolean;
+  onOpenChannelPicker?: () => void;
   currentUser?: { email: string; name: string; picture: string } | null;
   onLogout?: () => void;
 }
@@ -40,6 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
   onResetSampleData,
   onSyncYouTube,
   isSyncingYouTube = false,
+  onOpenChannelPicker,
   currentUser,
   onLogout,
 }) => {
@@ -73,6 +75,16 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-medium shrink-0">
                   스튜디오
                 </span>
+                {onOpenChannelPicker && (
+                  <button
+                    type="button"
+                    onClick={onOpenChannelPicker}
+                    className="text-[10px] text-zinc-400 hover:text-white px-2 py-0.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 transition-colors cursor-pointer border border-zinc-700/60 flex items-center gap-1"
+                    title="연동할 유튜브 채널 선택 (게임덩어리 등)"
+                  >
+                    <span>채널 선택</span>
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-zinc-400 mt-0.5 truncate">
                 <span className="truncate">{profile.creatorName}</span>
@@ -118,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="flex items-center gap-1 text-emerald-400 font-semibold">
                 <TrendingUp className="w-3.5 h-3.5" />
                 <span>
-                  {latestRecord.date === new Date().toISOString().slice(0, 10) ? '오늘' : `${latestRecord.date} 마감`} +{latestRecord.subsGained.toLocaleString()}명
+                  {(() => { const n = new Date(); return latestRecord.date === `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; })() ? '오늘' : `${latestRecord.date} 마감`} +{latestRecord.subsGained.toLocaleString()}명
                 </span>
               </div>
             </div>

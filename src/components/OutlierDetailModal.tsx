@@ -502,7 +502,7 @@ export const OutlierDetailModal: React.FC<OutlierDetailModalProps> = ({
                     <div className="text-xs text-zinc-400">
                       당일 기여 조회수: <strong className="text-white font-mono font-bold">{primaryVideo.views.toLocaleString()}회</strong> 
                       <span className="text-zinc-500 ml-1">
-                        (전체의 약 {Math.round((primaryVideo.views / record.views) * 100)}%)
+                        (전체의 약 {record.views > 0 ? Math.round((primaryVideo.views / record.views) * 100) : 0}%)
                       </span>
                     </div>
                   )}

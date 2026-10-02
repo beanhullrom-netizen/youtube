@@ -22,7 +22,15 @@ import { CreatorJournal } from './components/CreatorJournal';
 import { EmotionCalendarModal } from './components/EmotionCalendarModal';
 import { SettingsModal } from './components/SettingsModal';
 import { AuthGate } from './components/AuthGate';
-import { syncRecentYouTubeData } from './services/youtubeAnalytics';
+import { ChannelPickerModal } from './components/ChannelPickerModal';
+import { 
+  syncRecentYouTubeData, 
+  requestGoogleAccessToken, 
+  fetchMyChannels, 
+  setSelectedChannelId, 
+  YouTubeChannelInfo,
+  TARGET_CHANNEL_ID
+} from './services/youtubeAnalytics';
 import { Loader2, PenSquare, Target, TrendingUp, Calendar, Settings } from 'lucide-react';
 
 export default function App() {
@@ -36,6 +44,9 @@ export default function App() {
   const [calendarSelectedDate, setCalendarSelectedDate] = useState<string | null>(null);
   const [isSyncingYouTube, setIsSyncingYouTube] = useState(false);
   const [syncMessage, setSyncMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [isChannelPickerOpen, setIsChannelPickerOpen] = useState(false);
+  const [detectedChannels, setDetectedChannels] = useState<YouTubeChannelInfo[]>([]);
+  const [currentOAuthToken, setCurrentOAuthToken] = useState<string>('');
 
   // Supabase 클라우드 데이터베이스 초기 로드
   useEffect(() => {
@@ -155,37 +166,111 @@ export default function App() {
     await handleUpdateProfile(fixedProfile);
   };
 
+  // 채널 정보 적용 및 결과 처리
+  const handleSyncResult = async (result: any, channel?: YouTubeChannelInfo) => {
+    // Save updated records to Supabase Cloud
+    await handleUpdateRecords(result.updatedRecords);
+
+    // Update profile channel title, creator name, currentSubs in Supabase Cloud
+    const finalTitle = result.channelInfo?.title || channel?.title || '게임덩어리';
+    const finalSubs = result.channelInfo?.subscriberCount || channel?.subscriberCount || 89818;
+    const updatedProf: ChannelProfile = {
+      ...profile,
+      channelName: finalTitle,
+      creatorName: finalTitle,
+      targetSubs: 100000, // 10만 실버버튼 고정
+      currentSubs: finalSubs,
+    };
+    await handleUpdateProfile(updatedProf);
+
+    const msg = result.syncedDaysCount > 0
+      ? `🎉 '${finalTitle}' (구독자 ${finalSubs.toLocaleString()}명) 연동 완료! 최근 ${result.syncedDaysCount}일치 공식 데이터가 Supabase에 저장되었습니다.`
+      : `✅ '${finalTitle}' (구독자 ${finalSubs.toLocaleString()}명) 연동 완료!`;
+
+    setSyncMessage({
+      text: msg,
+      type: 'success',
+    });
+    setTimeout(() => setSyncMessage(null), 8000);
+  };
+
+  // 특정 채널로 동기화 실행
+  const executeSyncWithChannel = async (channel: YouTubeChannelInfo, token?: string) => {
+    try {
+      setIsSyncingYouTube(true);
+      setIsChannelPickerOpen(false);
+      setSelectedChannelId(channel.channelId);
+
+      const effectiveToken = token || currentOAuthToken || await requestGoogleAccessToken();
+      const result = await syncRecentYouTubeData(records, 14, profile.averageRPM, effectiveToken);
+      await handleSyncResult(result, channel);
+    } catch (err: any) {
+      console.error('[YouTube Sync Error]', err);
+      const errMsg = err.message || '오류가 발생했습니다. 구글 콘솔 설정 상태를 확인해 주세요.';
+      setSyncMessage({
+        text: `⚠️ 유튜브 연동 실패: ${errMsg}`,
+        type: 'error',
+      });
+      setTimeout(() => setSyncMessage(null), 10000);
+    } finally {
+      setIsSyncingYouTube(false);
+    }
+  };
+
+  // 채널 선택 모달 열기
+  const handleOpenChannelPicker = async () => {
+    try {
+      setSyncMessage(null);
+      let token = currentOAuthToken;
+      if (!token) {
+        setIsSyncingYouTube(true);
+        token = await requestGoogleAccessToken();
+        setCurrentOAuthToken(token);
+        setIsSyncingYouTube(false);
+      }
+      const channels = await fetchMyChannels(token);
+      setDetectedChannels(channels);
+      setIsChannelPickerOpen(true);
+    } catch (err: any) {
+      setIsSyncingYouTube(false);
+      console.error('[Open Channel Picker Error]', err);
+      setSyncMessage({
+        text: `⚠️ 채널 목록 조회 실패: ${err.message || '로그인 창을 확인해 주세요.'}`,
+        type: 'error',
+      });
+      setTimeout(() => setSyncMessage(null), 8000);
+    }
+  };
+
   // Handle YouTube Analytics Sync
   const handleSyncYouTube = async () => {
     try {
       setIsSyncingYouTube(true);
       setSyncMessage(null);
-      const result = await syncRecentYouTubeData(records, 14, profile.averageRPM);
-      
-      // Save updated records to Supabase Cloud
-      await handleUpdateRecords(result.updatedRecords);
 
-      // Update profile channel title, creator name, currentSubs in Supabase Cloud
-      if (result.channelInfo.title) {
-        const updatedProf: ChannelProfile = {
-          ...profile,
-          channelName: result.channelInfo.title,
-          creatorName: result.channelInfo.title,
-          targetSubs: 100000, // 10만 실버버튼 고정
-          currentSubs: result.channelInfo.subscriberCount || 87300,
-        };
-        await handleUpdateProfile(updatedProf);
+      // 1. Google OAuth 로그인 팝업 요청
+      const token = await requestGoogleAccessToken();
+      setCurrentOAuthToken(token);
+
+      // 2. 계정 내 사용 가능한 채널 목록 감지
+      const channels = await fetchMyChannels(token);
+      setDetectedChannels(channels);
+
+      // 3. 만약 2개 이상의 채널이 감지되면 채널 선택 모달을 띄워 사용자가 '게임덩어리'를 직접 선택하게 함
+      if (channels.length > 1) {
+        setIsChannelPickerOpen(true);
+        setIsSyncingYouTube(false);
+        return;
       }
 
-      const msg = result.syncedDaysCount > 0
-        ? `🎉 유튜브 연동 완료! 채널 '${result.channelInfo.title}'의 최근 ${result.syncedDaysCount}일치 공식 데이터가 Supabase에 저장되었습니다.`
-        : `✅ 채널 '${result.channelInfo.title}' (구독자 ${result.channelInfo.subscriberCount.toLocaleString()}명) 연동 완료!`;
-
-      setSyncMessage({
-        text: msg,
-        type: 'success',
-      });
-      setTimeout(() => setSyncMessage(null), 8000);
+      // 4. 단일 채널이거나 목표 채널 '게임덩어리' 직접 동기화
+      const targetChannel = channels.find(c => c.channelId === TARGET_CHANNEL_ID) || channels[0];
+      if (targetChannel) {
+        await executeSyncWithChannel(targetChannel, token);
+      } else {
+        const result = await syncRecentYouTubeData(records, 14, profile.averageRPM, token);
+        await handleSyncResult(result);
+      }
     } catch (err: any) {
       console.error('[YouTube Sync Error]', err);
       const errMsg = err.message || '오류가 발생했습니다. 구글 콘솔 설정 상태를 확인해 주세요.';
@@ -220,6 +305,7 @@ export default function App() {
             onResetSampleData={handleResetSampleData}
             onSyncYouTube={handleSyncYouTube}
             isSyncingYouTube={isSyncingYouTube}
+            onOpenChannelPicker={handleOpenChannelPicker}
             currentUser={user}
             onLogout={handleLogout}
           />
@@ -234,13 +320,21 @@ export default function App() {
               ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300' 
               : 'bg-rose-950/60 border-rose-500/40 text-rose-300'
           }`}>
-            <span>{syncMessage.text}</span>
-            <button 
-              onClick={() => setSyncMessage(null)}
-              className="px-2 py-0.5 rounded bg-black/40 hover:bg-black/60 text-zinc-300 text-xs"
-            >
-              닫기
-            </button>
+            <span className="leading-relaxed">{syncMessage.text}</span>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleOpenChannelPicker}
+                className="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition-colors cursor-pointer"
+              >
+                채널 선택
+              </button>
+              <button 
+                onClick={() => setSyncMessage(null)}
+                className="px-2 py-1 rounded bg-black/40 hover:bg-black/60 text-zinc-300 text-xs transition-colors cursor-pointer"
+              >
+                닫기
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -391,6 +485,15 @@ export default function App() {
         onUpdateProfile={handleUpdateProfile}
         onImportData={handleImportData}
         onResetSampleData={handleResetSampleData}
+      />
+
+      {/* YouTube Channel Picker Modal */}
+      <ChannelPickerModal
+        isOpen={isChannelPickerOpen}
+        onClose={() => setIsChannelPickerOpen(false)}
+        onSelect={(channel) => executeSyncWithChannel(channel, currentOAuthToken)}
+        detectedChannels={detectedChannels}
+        token={currentOAuthToken}
       />
     </div>
   )}

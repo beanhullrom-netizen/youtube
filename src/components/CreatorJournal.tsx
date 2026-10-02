@@ -172,7 +172,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
       // If no record exists for this date, default todaySubs sensibly based on neighbors
       const fallbackSubs = previousRecordForDate?.todaySubs 
         || nextRecordForDate?.todaySubs 
-        || (records.length > 0 ? records[records.length - 1].todaySubs : 87300);
+        || (records.length > 0 ? records[records.length - 1].todaySubs : 89818);
       setTodaySubs(fallbackSubs);
       setNoteContent('');
       setVideoTitle('');
@@ -408,7 +408,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                     value={todaySubs || ''}
                     onChange={(e) => setTodaySubs(Number(e.target.value))}
                     required
-                    placeholder="예: 87300"
+                    placeholder="예: 89818"
                     className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm sm:text-base font-bold text-white font-mono focus:outline-none focus:border-red-500 transition-colors"
                   />
                   <span className="absolute right-3 sm:right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-zinc-400">

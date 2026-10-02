@@ -126,7 +126,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
   };
 
   // 가장 최근 일지(currentRecord)의 당일 마감 구독자 수를 최우선 기준으로 반영
-  const currentSubs = currentRecord ? currentRecord.todaySubs : (profile.currentSubs || 87300);
+  const currentSubs = currentRecord ? currentRecord.todaySubs : (profile.currentSubs || 89818);
   const prevSubsRef = useRef(currentSubs);
 
   // Automatically trigger celebration when a milestone target is newly achieved!

@@ -296,6 +296,10 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({
                               <span className="text-rose-400 shrink-0 flex items-center gap-0.5">
                                 <Film className="w-3 h-3" /> 쇼츠
                               </span>
+                            ) : row.uploadedVideoType === 'both' ? (
+                              <span className="text-purple-400 shrink-0 flex items-center gap-0.5">
+                                <Film className="w-3 h-3" /> 쇼츠+롱폼
+                              </span>
                             ) : (
                               <span className="text-blue-400 shrink-0 flex items-center gap-0.5">
                                 <Video className="w-3 h-3" /> 롱폼

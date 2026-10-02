@@ -51,7 +51,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       creatorName: creatorName.trim() || '크리에이터',
       category: category.trim() || '유튜브 콘텐츠',
       targetSubs: 100000, // 10만 실버버튼 영구 고정
-      currentSubs: profile.currentSubs || 87300,
+      currentSubs: profile.currentSubs || 89818,
       averageRPM: Number(averageRPM) || 2600,
     };
     onUpdateProfile(updated);
@@ -160,6 +160,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-red-500"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="text-[10px] sm:text-[11px] text-zinc-400 block mb-1">
+                유튜브 공식 연동 채널 ID
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value="UCrWL7xo4p4U4ScWzZNrOMGA (게임덩어리)"
+                  disabled
+                  readOnly
+                  className="w-full bg-zinc-950/80 border border-zinc-800/80 rounded-xl px-3 py-2 text-xs text-zinc-300 font-mono select-none"
+                />
+              </div>
+              <p className="text-[10px] text-zinc-500 mt-1">
+                * 계정 내 여러 채널 중 '게임덩어리' 공식 채널이 최우선 연동 대상으로 지정되어 있습니다.
+              </p>
             </div>
           </div>
 

@@ -108,8 +108,8 @@ export const OutlierAnalysis: React.FC<OutlierAnalysisProps> = ({
 
   // 영상 포맷별 승률 비교 (shorts vs long)
   const formatComparison = useMemo(() => {
-    const shortsOutliers = topOutliers.filter(item => item.record.uploadedVideoType === 'shorts').length;
-    const longOutliers = topOutliers.filter(item => item.record.uploadedVideoType === 'long').length;
+    const shortsOutliers = topOutliers.filter(item => item.record.uploadedVideoType === 'shorts' || item.record.uploadedVideoType === 'both').length;
+    const longOutliers = topOutliers.filter(item => item.record.uploadedVideoType === 'long' || item.record.uploadedVideoType === 'both').length;
     return { shortsOutliers, longOutliers };
   }, [topOutliers]);
 
@@ -415,9 +415,11 @@ export const OutlierAnalysis: React.FC<OutlierAnalysisProps> = ({
                             <span className={`p-1 rounded-md text-[10px] shrink-0 font-semibold ${
                               item.record.uploadedVideoType === 'shorts' 
                                 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' 
+                                : item.record.uploadedVideoType === 'both'
+                                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                                 : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
                             }`}>
-                              {item.record.uploadedVideoType === 'shorts' ? '쇼츠' : '롱폼'}
+                              {item.record.uploadedVideoType === 'shorts' ? '쇼츠' : item.record.uploadedVideoType === 'both' ? '쇼츠+롱폼' : '롱폼'}
                             </span>
                           )}
                           <span className="text-zinc-200 truncate group-hover/vid:text-red-400 transition-colors font-medium">

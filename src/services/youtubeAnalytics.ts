@@ -30,6 +30,35 @@ export interface YouTubeChannelInfo {
   totalViews: number;
 }
 
+// ---------- Target Channel & Selected Channel ID Management ----------
+export const TARGET_CHANNEL_ID = 'UCrWL7xo4p4U4ScWzZNrOMGA'; // 게임덩어리 공식 채널 ID
+export const TARGET_CHANNEL_NAME = '게임덩어리';
+
+let _selectedChannelId: string | null = null;
+
+export function getSelectedChannelId(): string {
+  if (_selectedChannelId) return _selectedChannelId;
+  try {
+    const saved = sessionStorage.getItem('yt_selected_channel_id');
+    if (saved) return saved;
+  } catch {}
+  return TARGET_CHANNEL_ID;
+}
+
+export function setSelectedChannelId(channelId: string): void {
+  _selectedChannelId = channelId;
+  try {
+    sessionStorage.setItem('yt_selected_channel_id', channelId);
+  } catch {}
+}
+
+export function clearSelectedChannelId(): void {
+  _selectedChannelId = null;
+  try {
+    sessionStorage.removeItem('yt_selected_channel_id');
+  } catch {}
+}
+
 export function resetGoogleToken(): void {
   const token = getCurrentAccessToken();
   if (token && typeof google !== 'undefined' && google.accounts?.oauth2?.revoke) {
@@ -42,6 +71,7 @@ export function resetGoogleToken(): void {
     }
   }
   currentAccessToken = null;
+  clearSelectedChannelId();
   try {
     sessionStorage.removeItem('yt_access_token');
   } catch {}
@@ -97,15 +127,17 @@ export async function fetchMyChannelProfile(token?: string): Promise<YouTubeChan
     throw new Error('Google 로그인이 필요합니다.');
   }
 
-  const res = await fetch(
-    'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true',
-    {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-        Accept: 'application/json',
-      },
-    }
-  );
+  const selectedId = getSelectedChannelId();
+  const endpoint = selectedId
+    ? `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${selectedId}`
+    : 'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true';
+
+  const res = await fetch(endpoint, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      Accept: 'application/json',
+    },
+  });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
@@ -115,17 +147,152 @@ export async function fetchMyChannelProfile(token?: string): Promise<YouTubeChan
   const data = await res.json();
   const item = data.items?.[0];
   if (!item) {
-    throw new Error('로그인한 구글 계정에 연결된 유튜브 채널을 찾을 수 없습니다.');
+    throw new Error('선택된 유튜브 채널을 찾을 수 없습니다. 채널 ID를 확인해주세요.');
   }
 
+  return parseChannelItem(item);
+}
+
+function parseChannelItem(item: any): YouTubeChannelInfo {
   return {
     channelId: item.id,
     title: item.snippet.title,
     customUrl: item.snippet.customUrl,
-    thumbnailUrl: item.snippet.thumbnails?.default?.url,
-    subscriberCount: Number(item.statistics.subscriberCount) || 0,
-    totalViews: Number(item.statistics.viewCount) || 0,
+    thumbnailUrl: item.snippet.thumbnails?.default?.url || item.snippet.thumbnails?.medium?.url || '',
+    subscriberCount: Number(item.statistics?.subscriberCount) || 0,
+    totalViews: Number(item.statistics?.viewCount) || 0,
   };
+}
+
+/**
+ * 2-1. 계정에 연결된 채널 목록 조회 (목표 채널 '게임덩어리' 우선 감지)
+ */
+export async function fetchMyChannels(token?: string): Promise<YouTubeChannelInfo[]> {
+  const authToken = token || currentAccessToken;
+  if (!authToken) return [];
+
+  const list: YouTubeChannelInfo[] = [];
+  const seenIds = new Set<string>();
+
+  // 1. 목표 채널인 '게임덩어리' (UCrWL7xo4p4U4ScWzZNrOMGA) 우선 조회
+  try {
+    const targetRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${TARGET_CHANNEL_ID}`,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    );
+    if (targetRes.ok) {
+      const tData = await targetRes.json();
+      for (const item of (tData.items || [])) {
+        if (!seenIds.has(item.id)) {
+          seenIds.add(item.id);
+          list.push(parseChannelItem(item));
+        }
+      }
+    }
+  } catch (e) {
+    console.error('[fetchMyChannels target error]', e);
+  }
+
+  // 2. mine=true로 인증된 사용자 채널 목록 조회
+  try {
+    const res = await fetch(
+      'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true&maxResults=50',
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      for (const item of (data.items || [])) {
+        if (!seenIds.has(item.id)) {
+          seenIds.add(item.id);
+          list.push(parseChannelItem(item));
+        }
+      }
+    }
+  } catch (e) {
+    console.error('[fetchMyChannels mine error]', e);
+  }
+
+  return list;
+}
+
+/**
+ * 2-2. 채널 검색 (채널명, @핸들, 채널 ID 지원)
+ */
+export async function searchChannelsByQuery(
+  query: string,
+  token?: string
+): Promise<YouTubeChannelInfo[]> {
+  const authToken = token || currentAccessToken;
+  if (!authToken) return [];
+
+  const trimmed = query.trim();
+  if (!trimmed) return [];
+
+  // 1. 채널 ID 직접 검색 (UC로 시작하고 20자 이상)
+  if (trimmed.startsWith('UC') && trimmed.length >= 20) {
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${trimmed}`,
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items?.length) {
+          return data.items.map(parseChannelItem);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // 2. @핸들 검색
+  if (trimmed.startsWith('@')) {
+    try {
+      const handle = trimmed.slice(1);
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&forHandle=${encodeURIComponent(handle)}`,
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.items?.length) {
+          return data.items.map(parseChannelItem);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // 3. 채널 키워드/이름 검색
+  try {
+    const sRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(trimmed)}&maxResults=5`,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+    );
+    if (sRes.ok) {
+      const sData = await sRes.json();
+      const channelIds = (sData.items || [])
+        .map((it: any) => it.id?.channelId || it.snippet?.channelId)
+        .filter(Boolean);
+
+      if (channelIds.length > 0) {
+        const cRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelIds.join(',')}`,
+          { headers: { Authorization: `Bearer ${authToken}` } }
+        );
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          return (cData.items || []).map(parseChannelItem);
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  return [];
 }
 
 /**
@@ -141,8 +308,11 @@ export async function fetchYouTubeDailyAnalytics(
     throw new Error('Google 로그인이 필요합니다.');
   }
 
+  const selectedId = getSelectedChannelId();
+  const channelFilter = selectedId ? `channel==${selectedId}` : 'channel==MINE';
+
   const url = new URL('https://youtubeanalytics.googleapis.com/v2/reports');
-  url.searchParams.append('ids', 'channel==MINE');
+  url.searchParams.append('ids', channelFilter);
   url.searchParams.append('startDate', startDate);
   url.searchParams.append('endDate', endDate);
   // 조회할 메트릭스: 조회수, 증가구독자, 이탈구독자, 예상수익
@@ -161,7 +331,7 @@ export async function fetchYouTubeDailyAnalytics(
     // 만약 수익 권한이 없는 비수익화 채널인 경우 estimatedRevenue 제외하고 재시도
     if (res.status === 400 || res.status === 403) {
       const fallbackUrl = new URL('https://youtubeanalytics.googleapis.com/v2/reports');
-      fallbackUrl.searchParams.append('ids', 'channel==MINE');
+      fallbackUrl.searchParams.append('ids', channelFilter);
       fallbackUrl.searchParams.append('startDate', startDate);
       fallbackUrl.searchParams.append('endDate', endDate);
       fallbackUrl.searchParams.append('metrics', 'views,subscribersGained,subscribersLost');
@@ -177,12 +347,18 @@ export async function fetchYouTubeDailyAnalytics(
 
       if (!fallbackRes.ok) {
         const errorData = await fallbackRes.json().catch(() => ({}));
+        if (fallbackRes.status === 403) {
+          throw new Error("선택하신 구글 계정/채널에 '게임덩어리' 통계 조회 권한이 없습니다. 구글 로그인 팝업 창에서 반드시 '게임덩어리' 브랜드 계정을 선택하여 로그인해 주세요.");
+        }
         throw new Error(errorData.error?.message || `통계 조회 실패 (HTTP ${fallbackRes.status})`);
       }
       return await fallbackRes.json();
     }
 
     const errorData = await res.json().catch(() => ({}));
+    if (res.status === 403) {
+      throw new Error("선택하신 구글 계정/채널에 '게임덩어리' 통계 조회 권한이 없습니다. 구글 로그인 팝업 창에서 반드시 '게임덩어리' 브랜드 계정을 선택하여 로그인해 주세요.");
+    }
     throw new Error(errorData.error?.message || `통계 조회 실패 (HTTP ${res.status})`);
   }
 
@@ -315,6 +491,15 @@ export function mergeAnalyticsToRecords(
       !existingRec.note.startsWith('영상 업로드:') &&
       !existingRec.note.startsWith('최근 영상 견인:');
 
+    // 사용자가 직접 작성한 메모가 있으면 유지, 없으면 자동 메모 생성
+    const finalNote = hasCustomUserNote
+      ? existingRec!.note
+      : matchedVideo
+        ? `영상 업로드: ${matchedVideo.title}`
+        : priorVideo
+          ? `최근 영상 견인: ${priorVideo.title}`
+          : `YouTube Analytics 공식 통계 (조회수 ${views.toLocaleString()}회, 구독 순증 ${netGained >= 0 ? '+' : ''}${netGained}명)`;
+
     const defaultEmotion = existingRec?.emotion || (
       netGained >= 200 ? '🎉 대박 & 환호' :
       netGained >= 50 ? '🔥 열정 폭발' :
@@ -363,8 +548,10 @@ export async function fetchMyLatestVideos(
   maxResults = 50
 ): Promise<ChannelVideoItem[]> {
   try {
+    const selectedId = getSelectedChannelId();
+    const channelParam = selectedId ? `id=${selectedId}` : 'mine=true';
     const chRes = await fetch(
-      'https://www.googleapis.com/youtube/v3/channels?part=contentDetails&mine=true',
+      `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&${channelParam}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     if (!chRes.ok) return [];
@@ -414,8 +601,11 @@ export async function fetchDayTopVideos(
   if (!authToken) return [];
 
   try {
+    const selectedId = getSelectedChannelId();
+    const channelFilter = selectedId ? `channel==${selectedId}` : 'channel==MINE';
+
     const url = new URL('https://youtubeanalytics.googleapis.com/v2/reports');
-    url.searchParams.append('ids', 'channel==MINE');
+    url.searchParams.append('ids', channelFilter);
     url.searchParams.append('startDate', date);
     url.searchParams.append('endDate', date);
     url.searchParams.append('metrics', 'views');
@@ -495,15 +685,16 @@ export async function fetchDayTopVideos(
 export async function syncRecentYouTubeData(
   existingRecords: DailyRecord[],
   days: number = 14,
-  averageRPM: number = 2600
+  averageRPM: number = 2600,
+  preToken?: string
 ): Promise<{
   updatedRecords: DailyRecord[];
   channelInfo: YouTubeChannelInfo;
   syncedDaysCount: number;
 }> {
   console.log('[YouTube Sync] 1. 구글 OAuth 로그인 팝업 요청...');
-  // 1. 구글 OAuth 로그인 팝업
-  const token = await requestGoogleAccessToken();
+  // 1. 구글 OAuth 로그인 팝업 (preToken이 있으면 팝업 생략)
+  const token = preToken || await requestGoogleAccessToken();
   console.log('[YouTube Sync] 1. Access Token 획득 성공!');
 
   // 2. 내 채널 기본 정보 조회

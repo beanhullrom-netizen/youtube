@@ -483,6 +483,10 @@ export const KpiCards: React.FC<KpiCardsProps> = ({
               <span className="flex items-center gap-1 text-blue-400 font-semibold shrink-0">
                 <Video className="w-3 h-3" /> 롱폼:
               </span>
+            ) : uploadedVideoType === 'both' ? (
+              <span className="flex items-center gap-1 text-purple-400 font-semibold shrink-0">
+                <Film className="w-3 h-3" /> 쇼츠+롱폼:
+              </span>
             ) : (
               <span className="text-zinc-500">업로드 없음</span>
             )}

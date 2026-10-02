@@ -77,7 +77,7 @@ export function fromDbProfile(row: any): ChannelProfile {
     creatorName: row.creator_name || '게임덩어리',
     category: row.category || '테크 & 게임',
     targetSubs: 100000,
-    currentSubs: Number(row.current_subs ?? 87300),
+    currentSubs: Number(row.current_subs ?? 89818),
     targetDate: row.target_date || undefined,
     averageRPM: Number(row.average_rpm ?? 2600),
   };
@@ -90,7 +90,7 @@ export function toDbProfile(p: ChannelProfile) {
     creator_name: p.creatorName,
     category: p.category,
     target_subs: 100000,
-    current_subs: p.currentSubs || 87300,
+    current_subs: p.currentSubs || 89818,
     target_date: p.targetDate || null,
     average_rpm: p.averageRPM || 2600,
     updated_at: new Date().toISOString(),

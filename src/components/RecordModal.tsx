@@ -239,7 +239,7 @@ export const RecordModal: React.FC<RecordModalProps> = ({
                   min="0"
                   value={todaySubs || ''}
                   onChange={(e) => setTodaySubs(Number(e.target.value))}
-                  placeholder="예: 87300"
+                  placeholder="예: 89818"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500 font-bold"
                 />
               </div>

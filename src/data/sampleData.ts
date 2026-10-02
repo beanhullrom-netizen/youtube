@@ -5,7 +5,7 @@ export const DEFAULT_PROFILE: ChannelProfile = {
   creatorName: '게임덩어리',
   category: '테크 & 게임',
   targetSubs: 100000, // 10만명 (실버버튼 마일스톤 고정)
-  currentSubs: 87300,  // 현재 실시간 구독자 수
+  currentSubs: 89818,  // 현재 게임덩어리 실시간 구독자 수 (YouTube Studio 기준)
   averageRPM: 2600, // 1000회 조회당 2,600원
 };
 
