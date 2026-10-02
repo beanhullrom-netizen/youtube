@@ -1,10 +1,11 @@
 @echo off
 chcp 65001 > nul
+set "PATH=%LOCALAPPDATA%\Programs\Git\cmd;C:\Program Files\Git\cmd;%PATH%"
 title 크리에이터 데일리 스튜디오 - GitHub Pages 배포
 echo ========================================================
 echo   🚀 크리에이터 데일리 스튜디오를 GitHub Pages에 배포합니다...
 echo ========================================================
-call npm run build
+call npm.cmd run build
 if %errorlevel% neq 0 (
     echo 빌드 중 오류가 발생했습니다.
     pause
