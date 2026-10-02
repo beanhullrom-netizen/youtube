@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626" />
+      <stop offset="50%" stop-color="#f43f5e" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle -->
+  <rect x="3" y="3" width="58" height="58" rx="16" fill="url(#bgGrad)" />
+
+  <!-- Tv Screen -->
+  <rect x="14" y="14" width="36" height="25" rx="4" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Stand line below screen -->
+  <line x1="22" y1="45" x2="42" y2="45" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" />
+  
+  <!-- Play triangle inside screen -->
+  <polygon points="28,21.5 39,26.5 28,31.5" fill="#ffffff" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+
+  <!-- Live Status Green Dot with dark contrast ring -->
+  <circle cx="51" cy="51" r="7.5" fill="#10b981" stroke="#0c0d10" stroke-width="3" />
+</svg>
