@@ -223,7 +223,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <p className="text-[11px] text-zinc-400 leading-relaxed">
-              모든 기록은 브라우저(LocalStorage)에 안전하게 저장됩니다. 다른 기기로 옮기거나 안전하게 보관하려면 JSON으로 백업하세요.
+              모든 기록은 Supabase 클라우드 데이터베이스에 실시간으로 안전하게 동기화됩니다. 별도 파일 보관이나 이전이 필요한 경우 JSON으로 백업할 수 있습니다.
             </p>
 
             <div className="flex items-center gap-2 flex-wrap">

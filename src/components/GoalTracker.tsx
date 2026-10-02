@@ -102,17 +102,27 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
   const [showSubMilestones, setShowSubMilestones] = useState(true);
   const [selectedCelebration, setSelectedCelebration] = useState<SubMilestone | null>(null);
   const [isReplayMode, setIsReplayMode] = useState(false);
-  const [timeCapsule, setTimeCapsule] = useState<TimeCapsule100k | null>(() => loadTimeCapsule());
+  const [timeCapsule, setTimeCapsule] = useState<TimeCapsule100k | null>(null);
   const [isCapsuleModalOpen, setIsCapsuleModalOpen] = useState(false);
 
-  const handleSaveCapsule = (newCapsule: TimeCapsule100k) => {
+  useEffect(() => {
+    let isMounted = true;
+    loadTimeCapsule().then((capsule) => {
+      if (isMounted) setTimeCapsule(capsule);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleSaveCapsule = async (newCapsule: TimeCapsule100k) => {
     setTimeCapsule(newCapsule);
-    saveTimeCapsule(newCapsule);
+    await saveTimeCapsule(newCapsule);
   };
 
-  const handleResetCapsule = () => {
+  const handleResetCapsule = async () => {
     setTimeCapsule(null);
-    saveTimeCapsule(null);
+    await saveTimeCapsule(null);
   };
 
   // 가장 최근 일지(currentRecord)의 당일 마감 구독자 수를 최우선 기준으로 반영

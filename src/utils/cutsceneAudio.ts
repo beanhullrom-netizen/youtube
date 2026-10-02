@@ -11,10 +11,7 @@ class CutsceneAudioEngine {
   private noiseBuffer: AudioBuffer | null = null;
 
   constructor() {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('creator_studio_audio_muted');
-      this.isMuted = saved === 'true';
-    }
+    this.isMuted = false;
   }
 
   private initContext(): AudioContext | null {
@@ -40,9 +37,6 @@ class CutsceneAudioEngine {
 
   public setMuted(muted: boolean): void {
     this.isMuted = muted;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('creator_studio_audio_muted', String(muted));
-    }
   }
 
   public toggleMute(): boolean {

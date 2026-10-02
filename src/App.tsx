@@ -8,6 +8,7 @@ import { DailyRecord, ChannelProfile } from './types';
 import { 
   loadRecords, 
   saveRecords, 
+  deleteRecord,
   loadProfile, 
   saveProfile 
 } from './utils/storage';
@@ -21,10 +22,12 @@ import { CreatorJournal } from './components/CreatorJournal';
 import { EmotionCalendarModal } from './components/EmotionCalendarModal';
 import { SettingsModal } from './components/SettingsModal';
 import { syncRecentYouTubeData } from './services/youtubeAnalytics';
+import { Loader2 } from 'lucide-react';
 
 export default function App() {
-  const [records, setRecords] = useState<DailyRecord[]>(() => loadRecords());
-  const [profile, setProfile] = useState<ChannelProfile>(() => loadProfile());
+  const [records, setRecords] = useState<DailyRecord[]>(() => rechainRecords(INITIAL_SAMPLE_RECORDS));
+  const [profile, setProfile] = useState<ChannelProfile>(() => ({ ...DEFAULT_PROFILE, targetSubs: 100000 }));
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // Modals & Calendar state
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -33,22 +36,50 @@ export default function App() {
   const [isSyncingYouTube, setIsSyncingYouTube] = useState(false);
   const [syncMessage, setSyncMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  // Update records in state and localStorage
-  const handleUpdateRecords = (newRecords: DailyRecord[]) => {
+  // Supabase 클라우드 데이터베이스 초기 로드
+  useEffect(() => {
+    let isMounted = true;
+    async function initSupabaseData() {
+      try {
+        setIsInitializing(true);
+        const [loadedRecords, loadedProfile] = await Promise.all([
+          loadRecords(),
+          loadProfile(),
+        ]);
+        if (isMounted) {
+          setRecords(loadedRecords);
+          setProfile(loadedProfile);
+        }
+      } catch (err) {
+        console.error('[Supabase Init Error]', err);
+      } finally {
+        if (isMounted) {
+          setIsInitializing(false);
+        }
+      }
+    }
+    initSupabaseData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Update records in state and Supabase Cloud
+  const handleUpdateRecords = async (newRecords: DailyRecord[]) => {
     const chained = rechainRecords(newRecords);
     setRecords(chained);
-    saveRecords(chained);
+    await saveRecords(chained);
   };
 
-  // Update profile and ensure 100k target is locked
-  const handleUpdateProfile = (newProfile: ChannelProfile) => {
+  // Update profile and ensure 100k target is locked in Supabase Cloud
+  const handleUpdateProfile = async (newProfile: ChannelProfile) => {
     const fixedProfile: ChannelProfile = { ...newProfile, targetSubs: 100000 };
     setProfile(fixedProfile);
-    saveProfile(fixedProfile);
+    await saveProfile(fixedProfile);
   };
 
-  // Save or update a single journal record
-  const handleSaveJournalRecord = (savedRecord: DailyRecord) => {
+  // Save or update a single journal record in Supabase Cloud
+  const handleSaveJournalRecord = async (savedRecord: DailyRecord) => {
     const existingIndex = records.findIndex((r) => r.date === savedRecord.date);
     let updatedList: DailyRecord[];
 
@@ -72,40 +103,55 @@ export default function App() {
       targetSubs: 100000,
     };
 
-    // 상태 및 로컬 스토리지 즉각 동기화
+    // 상태 및 Supabase 클라우드 즉각 동기화 (로컬스토리지 미사용)
     setRecords(chained);
-    saveRecords(chained);
     setProfile(updatedProf);
-    saveProfile(updatedProf);
+
+    await Promise.all([
+      saveRecords(chained),
+      saveProfile(updatedProf),
+    ]);
   };
 
-  // Delete a journal record
-  const handleDeleteRecord = (id: string) => {
+  // Delete a journal record from Supabase Cloud
+  const handleDeleteRecord = async (id: string) => {
     const filtered = records.filter((r) => r.id !== id);
-    handleUpdateRecords(filtered);
+    const chained = rechainRecords(filtered);
+    setRecords(chained);
+    await Promise.all([
+      deleteRecord(id),
+      saveRecords(chained),
+    ]);
   };
 
-  // Reset to initial sample data
-  const handleResetSampleData = () => {
-    if (confirm('샘플 데이터로 초기화하시겠습니까? 작성했던 기록이 초기화됩니다.')) {
-      handleUpdateRecords(INITIAL_SAMPLE_RECORDS);
-      handleUpdateProfile({
+  // Reset to initial sample data in Supabase Cloud
+  const handleResetSampleData = async () => {
+    if (confirm('샘플 데이터로 초기화하시겠습니까? Supabase 클라우드 데이터베이스의 기록이 초기화됩니다.')) {
+      const resetRecords = rechainRecords(INITIAL_SAMPLE_RECORDS);
+      const resetProfile: ChannelProfile = {
         ...DEFAULT_PROFILE,
         targetSubs: 100000,
         currentSubs: 87300,
-      });
+      };
+      setRecords(resetRecords);
+      setProfile(resetProfile);
+      await Promise.all([
+        saveRecords(resetRecords),
+        saveProfile(resetProfile),
+      ]);
       setSyncMessage({
-        text: '초기 샘플 데이터로 복원되었습니다.',
+        text: '☁️ Supabase 클라우드 데이터베이스가 초기 샘플 데이터로 복원되었습니다.',
         type: 'success',
       });
       setTimeout(() => setSyncMessage(null), 3000);
     }
   };
 
-  // Import JSON backup data
-  const handleImportData = (importedRecords: DailyRecord[], importedProfile: ChannelProfile) => {
-    handleUpdateRecords(importedRecords);
-    handleUpdateProfile({ ...importedProfile, targetSubs: 100000 });
+  // Import JSON backup data to Supabase Cloud
+  const handleImportData = async (importedRecords: DailyRecord[], importedProfile: ChannelProfile) => {
+    const fixedProfile: ChannelProfile = { ...importedProfile, targetSubs: 100000 };
+    await handleUpdateRecords(importedRecords);
+    await handleUpdateProfile(fixedProfile);
   };
 
   // Handle YouTube Analytics Sync
@@ -115,10 +161,10 @@ export default function App() {
       setSyncMessage(null);
       const result = await syncRecentYouTubeData(records, 14, profile.averageRPM);
       
-      // Save updated records
-      handleUpdateRecords(result.updatedRecords);
+      // Save updated records to Supabase Cloud
+      await handleUpdateRecords(result.updatedRecords);
 
-      // Update profile channel title, creator name, currentSubs and keep targetSubs fixed to 100,000
+      // Update profile channel title, creator name, currentSubs in Supabase Cloud
       if (result.channelInfo.title) {
         const updatedProf: ChannelProfile = {
           ...profile,
@@ -127,11 +173,11 @@ export default function App() {
           targetSubs: 100000, // 10만 실버버튼 고정
           currentSubs: result.channelInfo.subscriberCount || 87300,
         };
-        handleUpdateProfile(updatedProf);
+        await handleUpdateProfile(updatedProf);
       }
 
       const msg = result.syncedDaysCount > 0
-        ? `🎉 유튜브 연동 완료! 채널 '${result.channelInfo.title}'의 최근 ${result.syncedDaysCount}일치 공식 데이터가 반영되었습니다.`
+        ? `🎉 유튜브 연동 완료! 채널 '${result.channelInfo.title}'의 최근 ${result.syncedDaysCount}일치 공식 데이터가 Supabase에 저장되었습니다.`
         : `✅ 채널 '${result.channelInfo.title}' (구독자 ${result.channelInfo.subscriberCount.toLocaleString()}명) 연동 완료!`;
 
       setSyncMessage({
@@ -243,13 +289,16 @@ export default function App() {
             <span>•</span>
             <span>10만 실버버튼 크리에이터 데일리 일지 스튜디오</span>
           </div>
-          <span className="text-[11px] text-zinc-600">
-            목표 100,000명 달성까지 매일의 감정과 구독자를 기록하세요
-          </span>
+          <div className="flex items-center gap-2 text-[11px] text-zinc-500">
+            <span className="inline-flex items-center gap-1 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Supabase Cloud DB 연동됨
+            </span>
+          </div>
         </div>
       </footer>
 
-      {/* Separated Monthly Emotion Calendar Modal (Feature 3) */}
+      {/* Separated Monthly Emotion Calendar Modal */}
       <EmotionCalendarModal
         isOpen={isEmotionCalendarOpen}
         onClose={() => setIsEmotionCalendarOpen(false)}
