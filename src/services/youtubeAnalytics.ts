@@ -79,9 +79,9 @@ export function resetGoogleToken(): void {
 
 /**
  * 1. Google OAuth 2.0 팝업 로그인으로 Access Token 발급
- *    prompt: 'select_account'를 주어 구글 계정 및 하위 브랜드 채널(게임덩어리 등) 선택창을 강제로 띄웁니다.
+ *    prompt: 'consent'를 기본으로 적용하여 구글 계정 내 브랜드 채널(게임덩어리) 선택창을 강제로 띄웁니다.
  */
-export function requestGoogleAccessToken(): Promise<string> {
+export function requestGoogleAccessToken(promptType: 'consent' | 'select_account' = 'consent'): Promise<string> {
   return new Promise((resolve, reject) => {
     if (typeof google === 'undefined' || !google.accounts?.oauth2) {
       return reject(new Error('Google 로그인 라이브러리가 아직 로드되지 않았습니다. 페이지를 새로고침해 주세요.'));
@@ -92,7 +92,18 @@ export function requestGoogleAccessToken(): Promise<string> {
     }
 
     try {
-      currentAccessToken = null; // 이전 채널 세션 초기화
+      // 이전 토큰이 남아있으면 revoke하여 기존 계정 고정(진시훤 등)을 해제
+      const oldToken = getCurrentAccessToken();
+      if (oldToken && typeof google !== 'undefined' && google.accounts?.oauth2?.revoke) {
+        try {
+          google.accounts.oauth2.revoke(oldToken, () => {});
+        } catch {}
+      }
+      currentAccessToken = null;
+      try {
+        sessionStorage.removeItem('yt_access_token');
+      } catch {}
+
       const tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
@@ -109,8 +120,8 @@ export function requestGoogleAccessToken(): Promise<string> {
         },
       });
 
-      // select_account: 구글 로그인 시 원하는 채널(브랜드 계정)을 직접 고를 수 있는 창을 띄움
-      tokenClient.requestAccessToken({ prompt: 'select_account' });
+      // prompt: 'consent' -> 구글 계정 내 브랜드 채널('게임덩어리') 선택 화면 강제 호출
+      tokenClient.requestAccessToken({ prompt: promptType });
     } catch (err: any) {
       reject(new Error(err.message || '로그인 창을 띄우는 중 오류가 발생했습니다.'));
     }
@@ -119,7 +130,7 @@ export function requestGoogleAccessToken(): Promise<string> {
 
 
 /**
- * 2. 현재 로그인된 내 채널 프로필 및 누적 통계 조회
+ * 2. 현재 로그인된 내 채널 프로필 및 누적 통계 조회 (게임덩어리 채널 정합성 보장)
  */
 export async function fetchMyChannelProfile(token?: string): Promise<YouTubeChannelInfo> {
   const authToken = token || currentAccessToken;
@@ -127,17 +138,16 @@ export async function fetchMyChannelProfile(token?: string): Promise<YouTubeChan
     throw new Error('Google 로그인이 필요합니다.');
   }
 
-  const selectedId = getSelectedChannelId();
-  const endpoint = selectedId
-    ? `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${selectedId}`
-    : 'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true';
-
-  const res = await fetch(endpoint, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      Accept: 'application/json',
-    },
-  });
+  // 1. 현재 로그인된 토큰의 실제 채널(mine=true)을 우선 조회
+  const res = await fetch(
+    'https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true',
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        Accept: 'application/json',
+      },
+    }
+  );
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
@@ -147,10 +157,19 @@ export async function fetchMyChannelProfile(token?: string): Promise<YouTubeChan
   const data = await res.json();
   const item = data.items?.[0];
   if (!item) {
-    throw new Error('선택된 유튜브 채널을 찾을 수 없습니다. 채널 ID를 확인해주세요.');
+    throw new Error('로그인한 구글 계정에 연결된 유튜브 채널을 찾을 수 없습니다.');
   }
 
-  return parseChannelItem(item);
+  const currentChannel = parseChannelItem(item);
+
+  // 2. 만약 로그인된 채널이 '게임덩어리'가 아닌 개인 계정(진시훤 등)인 경우 차단 및 안내
+  if (!currentChannel.title.includes('게임덩어리') && currentChannel.channelId !== TARGET_CHANNEL_ID) {
+    throw new Error(
+      `선택하신 채널이 '${currentChannel.title}'(개인 계정)입니다. 구글 로그인 창에서 계정을 클릭한 후, 나타나는 채널 선택 화면에서 반드시 '게임덩어리' 채널을 클릭해 주세요!`
+    );
+  }
+
+  return currentChannel;
 }
 
 function parseChannelItem(item: any): YouTubeChannelInfo {

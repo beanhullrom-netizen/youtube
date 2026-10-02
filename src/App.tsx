@@ -27,6 +27,7 @@ import {
   syncRecentYouTubeData, 
   requestGoogleAccessToken, 
   fetchMyChannels, 
+  fetchMyChannelProfile,
   setSelectedChannelId, 
   YouTubeChannelInfo,
   TARGET_CHANNEL_ID
@@ -137,13 +138,16 @@ export default function App() {
   };
 
   // Reset to initial sample data in Supabase Cloud
+  // Reset to initial sample data in Supabase Cloud
   const handleResetSampleData = async () => {
     if (confirm('샘플 데이터로 초기화하시겠습니까? Supabase 클라우드 데이터베이스의 기록이 초기화됩니다.')) {
       const resetRecords = rechainRecords(INITIAL_SAMPLE_RECORDS);
       const resetProfile: ChannelProfile = {
         ...DEFAULT_PROFILE,
+        channelName: '게임덩어리',
+        creatorName: '게임덩어리',
         targetSubs: 100000,
-        currentSubs: 87300,
+        currentSubs: 89818,
       };
       setRecords(resetRecords);
       setProfile(resetProfile);
@@ -157,6 +161,30 @@ export default function App() {
       });
       setTimeout(() => setSyncMessage(null), 3000);
     }
+  };
+
+  // 게임덩어리 기본 데이터로 즉시 복구 (개인 계정 오염 해제용)
+  const handleRestoreGameDungeori = async () => {
+    const resetRecords = rechainRecords(INITIAL_SAMPLE_RECORDS);
+    const resetProfile: ChannelProfile = {
+      channelName: '게임덩어리',
+      creatorName: '게임덩어리',
+      category: '테크 & 게임',
+      targetSubs: 100000,
+      currentSubs: 89818,
+      averageRPM: profile.averageRPM || 2600,
+    };
+    setRecords(resetRecords);
+    setProfile(resetProfile);
+    await Promise.all([
+      saveRecords(resetRecords),
+      saveProfile(resetProfile),
+    ]);
+    setSyncMessage({
+      text: "✅ '게임덩어리' (89,818명) 프로필로 복구되었습니다! 이제 상단의 [유튜브 동기화]를 눌러 구글 로그인 창에서 '게임덩어리'를 선택해 주세요.",
+      type: 'success',
+    });
+    setTimeout(() => setSyncMessage(null), 8000);
   };
 
   // Import JSON backup data to Supabase Cloud
@@ -201,7 +229,7 @@ export default function App() {
       setIsChannelPickerOpen(false);
       setSelectedChannelId(channel.channelId);
 
-      const effectiveToken = token || currentOAuthToken || await requestGoogleAccessToken();
+      const effectiveToken = token || currentOAuthToken || await requestGoogleAccessToken('consent');
       const result = await syncRecentYouTubeData(records, 14, profile.averageRPM, effectiveToken);
       await handleSyncResult(result, channel);
     } catch (err: any) {
@@ -211,7 +239,7 @@ export default function App() {
         text: `⚠️ 유튜브 연동 실패: ${errMsg}`,
         type: 'error',
       });
-      setTimeout(() => setSyncMessage(null), 10000);
+      setTimeout(() => setSyncMessage(null), 12000);
     } finally {
       setIsSyncingYouTube(false);
     }
@@ -224,7 +252,7 @@ export default function App() {
       let token = currentOAuthToken;
       if (!token) {
         setIsSyncingYouTube(true);
-        token = await requestGoogleAccessToken();
+        token = await requestGoogleAccessToken('consent');
         setCurrentOAuthToken(token);
         setIsSyncingYouTube(false);
       }
@@ -248,37 +276,23 @@ export default function App() {
       setIsSyncingYouTube(true);
       setSyncMessage(null);
 
-      // 1. Google OAuth 로그인 팝업 요청
-      const token = await requestGoogleAccessToken();
+      // 1. Google OAuth 로그인 팝업 요청 (consent 프롬프트로 브랜드 채널 선택 유도)
+      const token = await requestGoogleAccessToken('consent');
       setCurrentOAuthToken(token);
 
-      // 2. 계정 내 사용 가능한 채널 목록 감지
-      const channels = await fetchMyChannels(token);
-      setDetectedChannels(channels);
+      // 2. 현재 로그인된 채널 프로필 조회 ('게임덩어리'인지 검증)
+      const channelInfo = await fetchMyChannelProfile(token);
 
-      // 3. 만약 2개 이상의 채널이 감지되면 채널 선택 모달을 띄워 사용자가 '게임덩어리'를 직접 선택하게 함
-      if (channels.length > 1) {
-        setIsChannelPickerOpen(true);
-        setIsSyncingYouTube(false);
-        return;
-      }
-
-      // 4. 단일 채널이거나 목표 채널 '게임덩어리' 직접 동기화
-      const targetChannel = channels.find(c => c.channelId === TARGET_CHANNEL_ID) || channels[0];
-      if (targetChannel) {
-        await executeSyncWithChannel(targetChannel, token);
-      } else {
-        const result = await syncRecentYouTubeData(records, 14, profile.averageRPM, token);
-        await handleSyncResult(result);
-      }
+      // 3. 게임덩어리 채널로 즉시 동기화 실행
+      await executeSyncWithChannel(channelInfo, token);
     } catch (err: any) {
       console.error('[YouTube Sync Error]', err);
       const errMsg = err.message || '오류가 발생했습니다. 구글 콘솔 설정 상태를 확인해 주세요.';
       setSyncMessage({
-        text: `⚠️ 유튜브 연동 실패: ${errMsg}`,
+        text: `⚠️ 유튜브 연동 안내: ${errMsg}`,
         type: 'error',
       });
-      setTimeout(() => setSyncMessage(null), 10000);
+      setTimeout(() => setSyncMessage(null), 15000);
     } finally {
       setIsSyncingYouTube(false);
     }
@@ -333,6 +347,37 @@ export default function App() {
                 className="px-2 py-1 rounded bg-black/40 hover:bg-black/60 text-zinc-300 text-xs transition-colors cursor-pointer"
               >
                 닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Recovery Banner: 현재 채널이 '진시훤'이거나 구독자 수가 0명일 때 즉시 '게임덩어리'로 복구 안내 */}
+      {(profile.channelName === '진시훤' || profile.currentSubs === 0) && (
+        <div className="max-w-5xl mx-auto w-full px-4 lg:px-6 mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="p-4 rounded-2xl border bg-amber-950/40 border-amber-500/50 text-amber-200 text-xs sm:text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg shadow-amber-950/20">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <p className="font-bold text-white text-sm">현재 '진시훤'(개인 구글 계정)으로 잘못 설정되어 있습니다.</p>
+                <p className="text-xs text-amber-300/80 mt-0.5">
+                  '게임덩어리' 기준치(89,818명)로 복구하거나, 상단의 <strong>[유튜브 동기화]</strong>를 눌러 구글 로그인 창에서 <strong>'게임덩어리'</strong> 채널을 선택해 주세요.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button
+                onClick={handleRestoreGameDungeori}
+                className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                🎮 게임덩어리로 복구
+              </button>
+              <button
+                onClick={handleSyncYouTube}
+                className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                유튜브 동기화
               </button>
             </div>
           </div>
