@@ -179,57 +179,57 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
   const nextMilestone = SUB_MILESTONES.find(m => m.target > currentSubs) || SUB_MILESTONES[SUB_MILESTONES.length - 1];
 
   return (
-    <div className="bg-gradient-to-r from-zinc-900 via-zinc-900/95 to-zinc-950 border border-zinc-800/90 rounded-3xl p-6 shadow-xl relative overflow-hidden space-y-5">
+    <div className="bg-gradient-to-r from-zinc-900 via-zinc-900/95 to-zinc-950 border border-zinc-800/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl relative overflow-hidden space-y-4 sm:space-y-5">
       <div className="absolute top-0 right-1/4 w-80 h-28 bg-red-600/10 blur-3xl pointer-events-none" />
 
       {/* Top Main Section */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 sm:gap-5">
         
         {/* Left: Goal Title, Numbers, Progress Bar */}
         <div className="space-y-2 flex-1 w-full">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg border flex items-center justify-center bg-zinc-200/10 text-zinc-100 border-zinc-400/30">
-                <Award className="w-4 h-4 text-red-400" />
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <span className="p-1 sm:p-1.5 rounded-lg border flex items-center justify-center bg-zinc-200/10 text-zinc-100 border-zinc-400/30 shrink-0">
+                <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
               </span>
               <span className="text-xs font-bold text-zinc-200 tracking-wide flex items-center gap-1.5">
                 <span className="text-zinc-100 font-extrabold">🥈 10만 실버버튼</span>
-                <span className="text-zinc-400 font-normal">크리에이터 마일스톤</span>
+                <span className="text-zinc-400 font-normal hidden xs:inline">크리에이터 마일스톤</span>
               </span>
 
               {/* Streak Badge Pill */}
               {streak.currentStreak > 0 && (
-                <span className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/40 text-orange-300 animate-in fade-in duration-300">
-                  <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
-                  <span>{streak.currentStreak}일 연속 일지 작성 중!</span>
+                <span className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/40 text-orange-300 animate-in fade-in duration-300">
+                  <Flame className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-orange-400 fill-orange-400" />
+                  <span>{streak.currentStreak}일 연속</span>
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-zinc-400 font-mono">
-                현재 <strong>{currentSubs.toLocaleString()}</strong>명 / 목표 <strong>100,000</strong>명
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+              <span className="text-zinc-400 font-mono text-[10px] sm:text-xs">
+                현재 <strong>{currentSubs.toLocaleString()}</strong>명 / <strong>100,000</strong>명
               </span>
-              <span className="text-[10px] text-zinc-400 bg-zinc-800/80 px-1.5 py-0.5 rounded border border-zinc-700">
+              <span className="text-[9px] sm:text-[10px] text-zinc-400 bg-zinc-800/80 px-1.5 py-0.5 rounded border border-zinc-700">
                 고정
               </span>
             </div>
           </div>
 
-          <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
-            <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <div className="flex items-baseline gap-2 flex-wrap pt-0.5">
+            <span className="text-xl sm:text-3xl font-black text-white tracking-tight">
               {targetSubs.toLocaleString()}명 달성까지
             </span>
-            <span className="text-base font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2.5 py-0.5 rounded-xl">
+            <span className="text-xs sm:text-base font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 sm:px-2.5 py-0.5 rounded-xl">
               {remainingSubs > 0 ? `${remainingSubs.toLocaleString()}명 남음` : '🎉 10만 실버버튼 달성!'}
             </span>
-            <span className="text-sm font-semibold text-zinc-300 font-mono">
+            <span className="text-xs sm:text-sm font-semibold text-zinc-300 font-mono">
               ({progressPct.toFixed(1)}% 달성)
             </span>
           </div>
 
           {/* Progress bar - Restored to vibrant glowing gradient without hazard stripes */}
-          <div className="w-full bg-zinc-950 rounded-full h-4 p-0.5 border border-zinc-800/90 mt-2.5 relative overflow-hidden shadow-inner">
+          <div className="w-full bg-zinc-950 rounded-full h-3.5 sm:h-4 p-0.5 border border-zinc-800/90 mt-2 sm:mt-2.5 relative overflow-hidden shadow-inner">
             <div
               className="h-full rounded-full transition-all duration-700 ease-out relative overflow-hidden"
               style={{ 
@@ -247,20 +247,20 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
         </div>
 
         {/* Right: Pace projection & Next Target Card */}
-        <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto shrink-0">
-          <div className="flex items-center gap-3.5 bg-zinc-950/90 border border-zinc-800/80 px-4 py-3.5 rounded-2xl text-xs shadow-inner">
-            <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+        <div className="w-full lg:w-auto shrink-0">
+          <div className="flex items-center gap-3 bg-zinc-950/90 border border-zinc-800/80 p-3 sm:px-4 sm:py-3.5 rounded-xl sm:rounded-2xl text-xs shadow-inner">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
               <Zap className="w-4 h-4" />
             </div>
-            <div>
-              <div className="text-zinc-400 flex items-center gap-1 font-medium">
+            <div className="min-w-0">
+              <div className="text-zinc-400 flex items-center gap-1 font-medium text-[11px] sm:text-xs">
                 <span>최근 7일 일평균</span>
                 <strong className="text-emerald-400 font-bold">+{avgDailyGain}명</strong>
-                <span>성장 속도</span>
+                <span className="hidden xs:inline">성장 속도</span>
               </div>
-              <div className="text-white font-semibold mt-1 flex items-center gap-1.5 flex-wrap">
-                <span className="text-zinc-400">10만 달성 예상:</span>
-                <span className="text-amber-300 font-bold font-mono text-sm">
+              <div className="text-white font-semibold mt-0.5 sm:mt-1 flex items-center gap-1.5 flex-wrap text-xs sm:text-sm">
+                <span className="text-zinc-400 text-[11px] sm:text-xs">10만 달성 예상:</span>
+                <span className="text-amber-300 font-bold font-mono text-xs sm:text-sm">
                   {daysToTarget > 0 ? `D-${daysToTarget}일 (${projectedDateStr})` : '마일스톤 달성! 🏆'}
                 </span>
               </div>
