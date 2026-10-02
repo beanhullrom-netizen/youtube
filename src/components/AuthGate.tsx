@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GOOGLE_CLIENT_ID } from '../services/youtubeAnalytics';
-import { ShieldCheck, ShieldAlert, Lock, UserCheck, LogOut, ArrowRight, Sparkles } from 'lucide-react';
+import { ShieldAlert, Lock, UserCheck, LogOut } from 'lucide-react';
 
 export const OWNER_EMAIL = 'beanhullrom@gmail.com';
 
@@ -203,9 +203,8 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
             <div className="text-xs font-mono text-rose-400 font-bold truncate">
               {deniedEmail || '알 수 없는 계정'}
             </div>
-            <div className="text-[11px] text-zinc-500 pt-1 border-t border-zinc-800/80 flex items-center gap-1">
-              <span>허가된 단독 계정:</span>
-              <span className="font-mono text-emerald-400 font-bold">{OWNER_EMAIL}</span>
+            <div className="text-[11px] text-zinc-500 pt-1 border-t border-zinc-800/80">
+              접근 권한이 없는 계정입니다.
             </div>
           </div>
 
@@ -214,7 +213,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
             className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-white rounded-2xl text-xs font-semibold transition-all cursor-pointer"
           >
             <LogOut className="w-4 h-4 text-zinc-400" />
-            <span>인가 계정({OWNER_EMAIL})으로 다시 로그인</span>
+            <span>다른 계정으로 다시 로그인</span>
           </button>
         </div>
       </div>
@@ -231,7 +230,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
         <header className="max-w-md mx-auto w-full pt-4 flex items-center justify-center gap-2 z-10">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/60 border border-zinc-800 text-[11px] text-zinc-400 backdrop-blur-md">
             <Lock className="w-3.5 h-3.5 text-amber-400" />
-            <span>소유자 단독 보안 잠금 모드</span>
+            <span>프라이빗 스튜디오 보안 잠금</span>
           </div>
         </header>
 
@@ -252,25 +251,10 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
             <h1 className="text-2xl font-black text-white tracking-tight mb-2">
               크리에이터 데일리 스튜디오
             </h1>
-            <p className="text-xs text-zinc-400 leading-relaxed mb-7">
+            <p className="text-xs text-zinc-400 leading-relaxed mb-8">
               10만 구독자 달성을 향한 매일의 성장 기록 및 수익 대시보드.<br />
-              지정된 단독 계정 인증 후 스튜디오가 열립니다.
+              비공개 스튜디오로, 승인된 크리에이터 계정만 이용할 수 있습니다.
             </p>
-
-            {/* Security Notice Card */}
-            <div className="p-3.5 bg-zinc-900/60 border border-zinc-800/90 rounded-2xl mb-7 text-left space-y-2">
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-400">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>접근 허가된 소유자 계정</span>
-              </div>
-              <div className="px-3 py-2 bg-black/40 rounded-xl border border-zinc-800 font-mono text-xs font-bold text-white flex items-center justify-between">
-                <span>{OWNER_EMAIL}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans">허가됨</span>
-              </div>
-              <p className="text-[10px] text-zinc-500 leading-normal">
-                * 타 구글 계정으로 로그인 시 보안 정책에 따라 접속이 즉시 차단됩니다.
-              </p>
-            </div>
 
             {/* Google Sign-in Button Container */}
             <div className="flex flex-col items-center justify-center min-h-[50px] mb-3">
