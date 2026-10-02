@@ -21,6 +21,7 @@ import { GrowthTrendChart } from './components/GrowthTrendChart';
 import { CreatorJournal } from './components/CreatorJournal';
 import { EmotionCalendarModal } from './components/EmotionCalendarModal';
 import { SettingsModal } from './components/SettingsModal';
+import { AuthGate } from './components/AuthGate';
 import { syncRecentYouTubeData } from './services/youtubeAnalytics';
 import { Loader2, PenSquare, Target, TrendingUp, Calendar, Settings } from 'lucide-react';
 
@@ -205,19 +206,23 @@ export default function App() {
   }, [records]);
 
   return (
-    <div className="min-h-screen bg-[#0c0d10] text-zinc-100 flex flex-col font-['Pretendard',sans-serif]">
-      {/* Top Header */}
-      <Header
-        profile={profile}
-        latestRecord={latestRecord}
-        records={records}
-        onOpenRecordModal={() => {}}
-        onOpenEmotionCalendar={() => setIsEmotionCalendarOpen(true)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onResetSampleData={handleResetSampleData}
-        onSyncYouTube={handleSyncYouTube}
-        isSyncingYouTube={isSyncingYouTube}
-      />
+    <AuthGate>
+      {(user, handleLogout) => (
+        <div className="min-h-screen bg-[#0c0d10] text-zinc-100 flex flex-col font-['Pretendard',sans-serif]">
+          {/* Top Header */}
+          <Header
+            profile={profile}
+            latestRecord={latestRecord}
+            records={records}
+            onOpenRecordModal={() => {}}
+            onOpenEmotionCalendar={() => setIsEmotionCalendarOpen(true)}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+            onResetSampleData={handleResetSampleData}
+            onSyncYouTube={handleSyncYouTube}
+            isSyncingYouTube={isSyncingYouTube}
+            currentUser={user}
+            onLogout={handleLogout}
+          />
 
       {/* Sync Status Banner */}
       {syncMessage && (
@@ -388,5 +393,7 @@ export default function App() {
         onResetSampleData={handleResetSampleData}
       />
     </div>
+  )}
+</AuthGate>
   );
 }

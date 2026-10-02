@@ -10,7 +10,8 @@ import {
   TrendingUp,
   RotateCcw,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  LogOut
 } from 'lucide-react';
 
 import { calculateStreak } from '../utils/streak';
@@ -25,6 +26,8 @@ interface HeaderProps {
   onResetSampleData: () => void;
   onSyncYouTube: () => void;
   isSyncingYouTube?: boolean;
+  currentUser?: { email: string; name: string; picture: string } | null;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -37,6 +40,8 @@ export const Header: React.FC<HeaderProps> = ({
   onResetSampleData,
   onSyncYouTube,
   isSyncingYouTube = false,
+  currentUser,
+  onLogout,
 }) => {
   const streak = calculateStreak(records);
 
@@ -173,6 +178,35 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
+
+            {/* Authenticated User & Logout */}
+            {currentUser && (
+              <div className="flex items-center gap-1.5 pl-1.5 border-l border-zinc-800/80">
+                {currentUser.picture ? (
+                  <img
+                    src={currentUser.picture}
+                    alt={currentUser.name}
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl border border-emerald-500/40 object-cover shadow-sm"
+                    title={`인증된 계정: ${currentUser.email}`}
+                  />
+                ) : (
+                  <div 
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold"
+                    title={`인증된 계정: ${currentUser.email}`}
+                  >
+                    {currentUser.name?.[0] || 'U'}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="p-2 text-zinc-400 hover:text-rose-400 bg-zinc-900/60 hover:bg-rose-950/30 rounded-xl border border-zinc-800/80 hover:border-rose-500/30 transition-colors cursor-pointer"
+                  title={`보안 로그아웃 (${currentUser.email})`}
+                >
+                  <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Primary CTA: Write Daily Journal Button */}

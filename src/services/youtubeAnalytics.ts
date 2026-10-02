@@ -2,7 +2,8 @@ import { DailyRecord, ChannelProfile } from '../types';
 
 declare const google: any;
 
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '580467075073-iihhma75f2f1nf9dpk78dr04kn3topiq.apps.googleusercontent.com';
+const CLIENT_ID = GOOGLE_CLIENT_ID;
 const SCOPES = [
   'https://www.googleapis.com/auth/yt-analytics.readonly',
   'https://www.googleapis.com/auth/yt-analytics-monetary.readonly',
