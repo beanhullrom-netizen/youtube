@@ -1,0 +1,7 @@
+{
+  "name": "크리에이터 데일리 스튜디오 (Creator Daily Studio)",
+  "description": "구독자 증감, 일일 조회수, 구독 전환율 및 그날의 한마디를 한눈에 기록하고 분석하는 크리에이터 맞춤형 스튜디오 대시보드",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

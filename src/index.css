@@ -1,0 +1,504 @@
+@import "tailwindcss";
+
+/* Custom sleek scrollbar for studio feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f0f12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* -------------------------------------------------------------
+ * Milestone Celebration & Special Animation Effects
+ * ----------------------------------------------------------- */
+
+/* Sunburst rotation for grand celebration */
+@keyframes sunburst-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-sunburst {
+  animation: sunburst-spin 25s linear infinite;
+}
+
+/* Floating celebration bounce */
+@keyframes float-celebrate {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.03);
+  }
+}
+
+.animate-float-celebrate {
+  animation: float-celebrate 2.5s ease-in-out infinite;
+}
+
+/* Cinematic Cutscene Shockwave Ring */
+@keyframes shockwave-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-shockwave {
+  animation: shockwave-ring 2.4s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+/* Slow majestic 3D floating animation */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 3.5s ease-in-out infinite;
+}
+
+/* Hyperdrive Warp Speed Stream Lines for 95k */
+@keyframes warp-stream {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(250%);
+    opacity: 0;
+  }
+}
+
+.animate-warp {
+  animation: warp-stream 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Light sweep reflection across cards */
+@keyframes sheen-sweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(250%) skewX(-20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.animate-sheen {
+  animation: sheen-sweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* 88,888 Gold Pulse */
+@keyframes gold-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.15), inset 0 0 10px rgba(251, 191, 36, 0.08);
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 15px rgba(251, 191, 36, 0.2);
+    border-color: rgba(251, 191, 36, 0.65);
+  }
+}
+
+.card-gold-glow {
+  animation: gold-pulse 3s ease-in-out infinite;
+}
+
+/* 90,000 Emerald Peak Aurora Glow */
+@keyframes peak-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15), inset 0 0 10px rgba(52, 211, 153, 0.08);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.35), inset 0 0 15px rgba(52, 211, 153, 0.2);
+    border-color: rgba(52, 211, 153, 0.65);
+  }
+}
+
+.card-peak-glow {
+  animation: peak-pulse 3.5s ease-in-out infinite;
+}
+
+/* 95,000 Rocket Final Countdown Pulse */
+@keyframes rocket-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.2), inset 0 0 10px rgba(239, 68, 68, 0.1);
+    border-color: rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(239, 68, 68, 0.4), inset 0 0 18px rgba(249, 115, 22, 0.25);
+    border-color: rgba(239, 68, 68, 0.75);
+  }
+}
+
+.card-rocket-glow {
+  animation: rocket-pulse 2.2s ease-in-out infinite;
+}
+
+/* 100,000 Silver Button Platinum Chrome Glow */
+@keyframes silver-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(226, 232, 240, 0.2), inset 0 0 12px rgba(148, 163, 184, 0.1);
+    border-color: rgba(203, 213, 225, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.45), inset 0 0 20px rgba(226, 232, 240, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.card-silver-glow {
+  animation: silver-pulse 3.8s ease-in-out infinite;
+}
+
+/* Sparkle Floating Animation */
+@keyframes float-sparkle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(12deg);
+  }
+}
+
+.animate-float-sparkle {
+  animation: float-sparkle 2.5s ease-in-out infinite;
+}
+
+/* ======================================================== */
+/* 🌟 CUTSCENE CUSTOM CINEMATIC SPECTACLE ANIMATIONS */
+/* ======================================================== */
+
+/* 1. 100k Silver Button Descends From Above (천상 강림) */
+@keyframes descent-drop {
+  0% {
+    transform: translateY(-260px) scale(0.65) rotate(-6deg);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  65% {
+    transform: translateY(12px) scale(1.06) rotate(1deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  82% {
+    transform: translateY(-6px) scale(0.98) rotate(0deg);
+  }
+  100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+.animate-descent-drop {
+  animation: descent-drop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* 2. 90k Mountain Peak: Climber & Summit Flag Strike (산악 등반 & 깃발 완착) */
+@keyframes climb-path {
+  0% {
+    transform: translate(-36px, 30px) scale(0.75);
+    opacity: 0;
+  }
+  45% {
+    transform: translate(-14px, 10px) scale(0.9);
+    opacity: 1;
+  }
+  85%, 100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 1;
+  }
+}
+.animate-climb {
+  animation: climb-path 1.2s ease-out forwards;
+}
+
+@keyframes flag-strike {
+  0%, 45% {
+    transform: translateY(-50px) scale(0) rotate(-35deg);
+    opacity: 0;
+  }
+  75% {
+    transform: translateY(0px) scale(1.35) rotate(8deg);
+    opacity: 1;
+  }
+  88% {
+    transform: translateY(-5px) scale(0.95) rotate(-3deg);
+  }
+  100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+.animate-flag-strike {
+  animation: flag-strike 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes beacon-flare {
+  0%, 65% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.4);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+.animate-beacon-flare {
+  animation: beacon-flare 2.2s ease-out infinite;
+}
+
+/* 3. 88,888 Gold Number: Slot Machine Roll & Cascade */
+@keyframes slot-roll {
+  0% {
+    transform: translateY(140%);
+    filter: blur(5px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-18%);
+    filter: blur(1.5px);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(6%);
+    filter: blur(0px);
+  }
+  100% {
+    transform: translateY(0);
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+.animate-slot-roll {
+  animation: slot-roll 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes coin-fall {
+  0% {
+    transform: translateY(-130px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(110px) rotate(360deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(140px) rotate(420deg) scale(0.9);
+    opacity: 0;
+  }
+}
+.animate-coin-fall {
+  animation: coin-fall 2s ease-in infinite;
+}
+
+/* 4. 95k Rocket Final Countdown: Rumble & Flame Pulse */
+@keyframes rocket-rumble {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(1.5px) rotate(1.5deg);
+  }
+  75% {
+    transform: translateY(-1px) rotate(-0.5deg);
+  }
+}
+.animate-rocket-rumble {
+  animation: rocket-rumble 0.18s linear infinite;
+}
+
+@keyframes flame-pulse {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scaleY(1.35) scaleX(1.15);
+    opacity: 1;
+  }
+}
+.animate-flame-pulse {
+  animation: flame-pulse 0.22s ease-in-out infinite;
+}
+
+@keyframes lift-off {
+  0% {
+    transform: translateY(50px) scale(0.85);
+    opacity: 0;
+  }
+  35% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}
+.animate-lift-off {
+  animation: lift-off 1.1s ease-out forwards;
+}
+
+/* Screen Shake Impact on Climax */
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-4px, 2px) rotate(-0.5deg); }
+  20%, 40%, 60%, 80% { transform: translate(4px, -2px) rotate(0.5deg); }
+}
+.animate-screen-shake {
+  animation: screen-shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* 5. Cinematic Camera Direction & Whiteout Flash */
+@keyframes cinematic-zoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  85% { transform: scale(1.18); }
+  100% { transform: scale(1.15); }
+}
+.animate-cinematic-zoom {
+  animation: cinematic-zoom 3.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes whiteout-flash {
+  0% { opacity: 0; }
+  20% { opacity: 0.92; }
+  40% { opacity: 0.85; }
+  100% { opacity: 0; pointer-events: none; }
+}
+.animate-whiteout-flash {
+  animation: whiteout-flash 0.4s ease-out forwards;
+}
+
+/* Mountain Summit Light Pillar */
+@keyframes beacon-beam-up {
+  0% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
+  50% { transform: scaleY(1.3) scaleX(1.4); opacity: 0.9; }
+  100% { transform: scaleY(1) scaleX(1); opacity: 0.75; }
+}
+.animate-beacon-beam {
+  animation: beacon-beam-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Laser Engraving Sweep for 100k Silver Button */
+@keyframes laser-sweep {
+  0% { width: 0%; opacity: 0; }
+  20% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100% { width: 100%; opacity: 0; }
+}
+.animate-laser-sweep {
+  animation: laser-sweep 1.4s ease-in-out forwards;
+}
+
+/* Official Milestone Seal Stamp Slam */
+@keyframes seal-stamp {
+  0% { transform: scale(3) rotate(-25deg); opacity: 0; }
+  70% { transform: scale(0.9) rotate(-8deg); opacity: 1; }
+  85% { transform: scale(1.05) rotate(-10deg); }
+  100% { transform: scale(1) rotate(-10deg); opacity: 1; }
+}
+.animate-seal-stamp {
+  animation: seal-stamp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Interactive Click Firework Particle Burst */
+@keyframes firework-burst {
+  0% { transform: scale(0.2) rotate(0deg); opacity: 1; }
+  60% { opacity: 0.95; }
+  100% { transform: scale(2) rotate(45deg); opacity: 0; }
+}
+.animate-firework-burst {
+  animation: firework-burst 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* High-Visibility Radial Firework Spark Explosion */
+@keyframes radial-spark {
+  0% {
+    transform: translate(0, 0) scale(1.6);
+    opacity: 1;
+    filter: brightness(2) drop-shadow(0 0 12px currentColor);
+  }
+  60% {
+    opacity: 1;
+    filter: brightness(1.5) drop-shadow(0 0 8px currentColor);
+  }
+  100% {
+    transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(0.65);
+    opacity: 0;
+    filter: brightness(0.8);
+  }
+}
+.animate-radial-spark {
+  animation: radial-spark 0.85s cubic-bezier(0.12, 0.85, 0.35, 1) forwards;
+}
+
+/* High-Visibility Floating/Tumbling Confetti */
+@keyframes confetti-tumble {
+  0% {
+    transform: translateY(-80px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotateX(720deg) rotateY(1080deg) rotateZ(360deg);
+    opacity: 0;
+  }
+}
+.animate-confetti-tumble {
+  animation: confetti-tumble var(--fall-duration, 3.2s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+
+
