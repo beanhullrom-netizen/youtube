@@ -22,7 +22,7 @@ import { CreatorJournal } from './components/CreatorJournal';
 import { EmotionCalendarModal } from './components/EmotionCalendarModal';
 import { SettingsModal } from './components/SettingsModal';
 import { syncRecentYouTubeData } from './services/youtubeAnalytics';
-import { Loader2 } from 'lucide-react';
+import { Loader2, PenSquare, Target, TrendingUp, Calendar, Settings } from 'lucide-react';
 
 export default function App() {
   const [records, setRecords] = useState<DailyRecord[]>(() => rechainRecords(INITIAL_SAMPLE_RECORDS));
@@ -244,7 +244,7 @@ export default function App() {
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 lg:px-6 py-6 space-y-6">
 
         {/* 1. 🥈 10만 실버버튼 목표 마일스톤 트래커 (중간 기착지 & 스트릭 포함) */}
-        <section aria-label="10만 실버버튼 마일스톤 목표 트래커">
+        <section id="goal-section" aria-label="10만 실버버튼 마일스톤 목표 트래커">
           <GoalTracker
             profile={profile}
             currentRecord={latestRecord}
@@ -254,7 +254,7 @@ export default function App() {
         </section>
 
         {/* 2. 📈 크리에이터 일지 기반 구독자 성장 선그래프 (첫 일지 ~ 마지막 일지) */}
-        <section aria-label="일지 기반 구독자 성장 곡선">
+        <section id="chart-section" aria-label="일지 기반 구독자 성장 곡선">
           <GrowthTrendChart
             records={records}
             targetSubs={100000}
@@ -281,8 +281,8 @@ export default function App() {
 
       </main>
 
-      {/* Clean Minimal Footer */}
-      <footer className="border-t border-zinc-900 bg-zinc-950/80 px-4 py-5 mt-10 text-center text-xs text-zinc-500">
+      {/* Clean Minimal Footer (with extra padding on mobile for bottom dock) */}
+      <footer className="border-t border-zinc-900 bg-zinc-950/80 px-4 py-5 pb-24 md:pb-5 mt-10 text-center text-xs text-zinc-500">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-zinc-400">{profile.channelName}</span>
@@ -297,6 +297,68 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Quick Action Bar (Only visible on mobile screens) */}
+      <nav 
+        className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/92 backdrop-blur-xl border-t border-zinc-800/80 px-2 py-2 pb-safe md:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.7)]"
+        aria-label="모바일 빠른 이동 메뉴"
+      >
+        <div className="grid grid-cols-5 gap-1 max-w-md mx-auto">
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('journal-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center py-1 px-1 rounded-xl text-zinc-400 hover:text-amber-400 active:scale-95 transition-all cursor-pointer"
+          >
+            <PenSquare className="w-5 h-5 mb-0.5 text-amber-400" />
+            <span className="text-[10px] font-bold text-amber-300">오늘 일지</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('goal-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center py-1 px-1 rounded-xl text-zinc-400 hover:text-white active:scale-95 transition-all cursor-pointer"
+          >
+            <Target className="w-5 h-5 mb-0.5 text-zinc-300" />
+            <span className="text-[10px] font-medium text-zinc-400">10만 목표</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('chart-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex flex-col items-center justify-center py-1 px-1 rounded-xl text-zinc-400 hover:text-white active:scale-95 transition-all cursor-pointer"
+          >
+            <TrendingUp className="w-5 h-5 mb-0.5 text-zinc-300" />
+            <span className="text-[10px] font-medium text-zinc-400">성장 차트</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsEmotionCalendarOpen(true)}
+            className="flex flex-col items-center justify-center py-1 px-1 rounded-xl text-zinc-400 hover:text-white active:scale-95 transition-all cursor-pointer"
+          >
+            <Calendar className="w-5 h-5 mb-0.5 text-zinc-300" />
+            <span className="text-[10px] font-medium text-zinc-400">감정 달력</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsSettingsOpen(true)}
+            className="flex flex-col items-center justify-center py-1 px-1 rounded-xl text-zinc-400 hover:text-white active:scale-95 transition-all cursor-pointer"
+          >
+            <Settings className="w-5 h-5 mb-0.5 text-zinc-300" />
+            <span className="text-[10px] font-medium text-zinc-400">설정</span>
+          </button>
+        </div>
+      </nav>
 
       {/* Separated Monthly Emotion Calendar Modal */}
       <EmotionCalendarModal

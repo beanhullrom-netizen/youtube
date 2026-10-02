@@ -733,23 +733,23 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
       )}
 
       {/* 1. Cinematic Letterbox Bars (21:9 Aspect Ratio) */}
-      <div className="absolute top-0 inset-x-0 h-11 sm:h-14 bg-black border-b border-zinc-800 z-40 flex items-center justify-between px-6 pointer-events-none">
-        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] tracking-widest text-zinc-400 font-mono uppercase">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
-          <span>{isPlayingCutscene ? '● PLAYING IN-GAME CINEMATIC CUTSCENE' : 'CREATOR STUDIO • MILESTONE ARCHIVE'}</span>
+      <div className="absolute top-0 inset-x-0 h-11 sm:h-14 bg-black border-b border-zinc-800 z-40 flex items-center justify-between px-3 sm:px-6 pointer-events-none">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] tracking-widest text-zinc-400 font-mono uppercase truncate max-w-[150px] xs:max-w-[220px] sm:max-w-none">
+          <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-red-600 animate-pulse shrink-0" />
+          <span className="truncate">{isPlayingCutscene ? '● CINEMATIC CUTSCENE' : 'MILESTONE ARCHIVE'}</span>
         </div>
         
         {/* Right header controls */}
-        <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="flex items-center gap-1.5 sm:gap-2 pointer-events-auto shrink-0">
           {/* Mute / Unmute Button */}
           <button
             type="button"
             onClick={handleToggleMute}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-zinc-300 hover:text-white transition-all cursor-pointer"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-zinc-300 hover:text-white transition-all cursor-pointer"
             title={isMuted ? '소리 켜기' : '소리 끄기'}
           >
             {isMuted ? <VolumeX className="w-3.5 h-3.5 text-zinc-500" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-400" />}
-            <span className="text-[10px]">{isMuted ? '음소거' : '사운드 ON'}</span>
+            <span className="text-[10px] hidden xs:inline">{isMuted ? '음소거' : '사운드 ON'}</span>
           </button>
 
           {/* Skip button if playing */}
@@ -757,27 +757,27 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
             <button
               type="button"
               onClick={handleSkipCutscene}
-              className="flex items-center gap-1 px-3 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-amber-300 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-mono font-bold text-amber-300 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
               title="컷신 스킵하기"
             >
-              <span>스킵 (SKIP)</span>
-              <FastForward className="w-3.5 h-3.5" />
+              <span className="text-[11px] sm:text-xs">스킵</span>
+              <FastForward className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </button>
           ) : (
-            <div className="text-[11px] text-zinc-400 font-mono tracking-wider">
-              ESC / 바깥 클릭 시 닫기
+            <div className="text-[10px] sm:text-[11px] text-zinc-400 font-mono tracking-wider">
+              ESC / 닫기
             </div>
           )}
         </div>
       </div>
 
-      <div className="absolute bottom-0 inset-x-0 h-11 sm:h-14 bg-black border-t border-zinc-800 z-40 flex items-center justify-between px-6 pointer-events-none">
-        <span className="text-[10px] sm:text-[11px] text-zinc-500 font-mono tracking-widest uppercase truncate">
-          {config.chapterTitle} • RECORDED FOR {milestone.label}
+      <div className="absolute bottom-0 inset-x-0 h-10 sm:h-14 bg-black border-t border-zinc-800 z-40 flex items-center justify-between px-3 sm:px-6 pointer-events-none">
+        <span className="text-[9px] sm:text-[11px] text-zinc-500 font-mono tracking-widest uppercase truncate max-w-[200px] sm:max-w-none">
+          {config.chapterTitle}
         </span>
         {isPlayingCutscene && (
-          <span className="text-[10px] font-mono text-amber-400 animate-pulse font-bold">
-            [ CINEMATIC SEQUENCE AUTO PLAYING ]
+          <span className="text-[9px] sm:text-[10px] font-mono text-amber-400 animate-pulse font-bold whitespace-nowrap">
+            [ AUTO PLAYING ]
           </span>
         )}
       </div>
@@ -904,7 +904,7 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
         /* 🏆 MODE 2: GRAND RESULT & REWARD VIEW (결과 확인 / 공식 인증서 전환 뷰) */
         /* ========================================================================= */
         <div
-          className={`bg-gradient-to-b ${config.gradientBg} border-2 ${config.borderClass} rounded-3xl w-full max-w-xl shadow-2xl relative overflow-hidden flex flex-col items-center text-center p-6 sm:p-7 cursor-default z-20 animate-in zoom-in-90 duration-300 my-auto`}
+          className={`bg-gradient-to-b ${config.gradientBg} border-2 ${config.borderClass} rounded-3xl w-full max-w-xl shadow-2xl relative overflow-hidden flex flex-col items-center text-center p-4 sm:p-7 cursor-default z-20 animate-in zoom-in-90 duration-300 my-auto max-h-[88dvh] overflow-y-auto no-scrollbar`}
           style={{
             boxShadow: `0 0 70px ${config.glowColor}, inset 0 0 40px rgba(0,0,0,0.85)`,
           }}
@@ -999,15 +999,15 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
 
               {/* 100k Time Capsule Trigger if Silver Milestone */}
               {milestone.target === 100000 && timeCapsule && onOpenTimeCapsule && (
-                <div className="w-full mb-3 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border-2 border-amber-400/60 flex items-center justify-between gap-3 text-left">
+                <div className="w-full mb-3 p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border-2 border-amber-400/60 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-left">
                   <div className="flex items-center gap-2.5">
                     <Mail className="w-5 h-5 text-amber-300 shrink-0" />
                     <div>
-                      <div className="text-xs font-bold text-amber-200 flex items-center gap-1.5">
+                      <div className="text-xs font-bold text-amber-200 flex items-center gap-1.5 flex-wrap">
                         <span>10만 타임캡슐 편지가 도착했습니다!</span>
                         <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300">봉인 해제</span>
                       </div>
-                      <div className="text-[11px] text-zinc-300">
+                      <div className="text-[11px] text-zinc-300 mt-0.5">
                         {timeCapsule.writtenSubs.toLocaleString()}명 시절 내가 쓴 편지를 지금 바로 열어보세요.
                       </div>
                     </div>
@@ -1015,7 +1015,7 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
                   <button
                     type="button"
                     onClick={onOpenTimeCapsule}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-zinc-950 font-black text-xs shrink-0 cursor-pointer shadow-md"
+                    className="w-full sm:w-auto text-center px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-zinc-950 font-black text-xs shrink-0 cursor-pointer shadow-md"
                   >
                     편지 읽기 📜
                   </button>
@@ -1026,7 +1026,7 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
             /* TAB 2: OFFICIAL CREATOR CERTIFICATE VIEW */
             <div className="w-full flex flex-col items-center animate-in fade-in duration-200">
               <div 
-                className="w-full p-6 sm:p-7 rounded-2xl bg-zinc-950 border-2 border-amber-400/80 shadow-2xl relative overflow-hidden text-center my-1"
+                className="w-full p-4 sm:p-7 rounded-2xl bg-zinc-950 border-2 border-amber-400/80 shadow-2xl relative overflow-hidden text-center my-1"
                 style={{
                   boxShadow: '0 0 35px rgba(245, 158, 11, 0.25), inset 0 0 25px rgba(0,0,0,0.9)',
                 }}
@@ -1103,11 +1103,11 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
           )}
 
           {/* Action Buttons Footer */}
-          <div className="flex items-center justify-center gap-2.5 w-full pt-3 mt-1 border-t border-zinc-800/80">
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 w-full pt-3 mt-1 border-t border-zinc-800/80">
             <button
               type="button"
               onClick={handleReplayCutscene}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 text-xs font-bold text-zinc-300 hover:text-white transition-all cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 text-xs font-bold text-zinc-300 hover:text-white transition-all cursor-pointer whitespace-nowrap"
             >
               <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
               <span>컷신 다시 보기 🎬</span>
@@ -1116,7 +1116,7 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
             <button
               type="button"
               onClick={handleFireworkBarrage}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 text-xs font-bold text-zinc-300 hover:text-white transition-all cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/80 text-xs font-bold text-zinc-300 hover:text-white transition-all cursor-pointer whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5 text-rose-400" />
               <span>축포 터뜨리기 🎆</span>
@@ -1125,7 +1125,7 @@ export const MilestoneCelebrationModal: React.FC<MilestoneCelebrationModalProps>
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer ml-auto"
+              className="w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
             >
               <span>스튜디오로 가기</span>
               <ArrowRight className="w-3.5 h-3.5" />

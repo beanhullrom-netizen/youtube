@@ -181,24 +181,24 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950 border border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden transition-all">
+    <div className="bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950 border border-zinc-800/90 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl relative overflow-hidden transition-all">
       {/* Background soft ambient glow */}
       <div className="absolute top-0 right-1/4 w-80 h-32 bg-rose-600/5 blur-3xl pointer-events-none" />
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-800/80 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 shadow-sm">
-            <TrendingUp className="w-5 h-5" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-zinc-800/80 relative z-10">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 shadow-sm shrink-0">
+            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-sm sm:text-lg font-bold text-white tracking-tight flex items-center gap-1.5 sm:gap-2 flex-wrap">
               <span>일지 기반 구독자 성장 곡선</span>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20 font-mono">
+              <span className="text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20 font-mono">
                 {timeRange === 'all' ? '전체 여정' : timeRange === '30d' ? '최근 30일' : '최근 14일'}
               </span>
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">
               처음 작성한 일지부터 가장 최근 일지까지의 구독자 성장 흐름입니다.
             </p>
           </div>
@@ -207,11 +207,11 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
         {/* Range filter buttons & Collapse Toggle */}
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           {validRecords.length > 14 && (
-            <div className="flex items-center bg-zinc-950/80 border border-zinc-800 p-1 rounded-xl text-xs font-semibold">
+            <div className="flex items-center bg-zinc-950/80 border border-zinc-800 p-0.5 sm:p-1 rounded-xl text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => setTimeRange('all')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] sm:text-xs ${
                   timeRange === 'all' 
                     ? 'bg-zinc-800 text-white shadow-sm' 
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -223,7 +223,7 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
                 <button
                   type="button"
                   onClick={() => setTimeRange('30d')}
-                  className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                  className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] sm:text-xs ${
                     timeRange === '30d' 
                       ? 'bg-zinc-800 text-white shadow-sm' 
                       : 'text-zinc-400 hover:text-zinc-200'
@@ -235,7 +235,7 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
               <button
                 type="button"
                 onClick={() => setTimeRange('14d')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-lg transition-colors cursor-pointer text-[11px] sm:text-xs ${
                   timeRange === '14d' 
                     ? 'bg-zinc-800 text-white shadow-sm' 
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -249,7 +249,7 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
           <button
             type="button"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800 transition-colors cursor-pointer border border-zinc-800/80"
+            className="p-1.5 sm:p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800 transition-colors cursor-pointer border border-zinc-800/80"
             title={isCollapsed ? '그래프 펼치기' : '그래프 접기'}
           >
             {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
@@ -258,97 +258,92 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
       </div>
 
       {/* KPI Cards: First Journal -> Last Journal Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 relative z-10">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 my-3 sm:my-4 relative z-10">
         {/* 1. First Record Starting Point */}
-        <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
-          <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-1">
+        <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-0.5 sm:mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span>첫 일지 시작점</span>
           </div>
-          <div className="text-base sm:text-lg font-bold text-white font-mono">
+          <div className="text-sm sm:text-lg font-bold text-white font-mono">
             {first.todaySubs.toLocaleString()}명
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5 truncate">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-0.5 truncate">
             {first.date} 기록
           </div>
         </div>
 
         {/* 2. Last Record Current Point */}
-        <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
-          <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-1">
+        <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-0.5 sm:mb-1">
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
             <span>현재 최신 기록</span>
           </div>
-          <div className="text-base sm:text-lg font-bold text-amber-300 font-mono">
+          <div className="text-sm sm:text-lg font-bold text-amber-300 font-mono">
             {last.todaySubs.toLocaleString()}명
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5 truncate">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-0.5 truncate">
             {last.date} 마감
           </div>
         </div>
 
         {/* 3. Total Growth During Period */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-br from-rose-950/20 to-zinc-950/70 border border-rose-500/30">
-          <div className="text-[11px] text-rose-300 flex items-center gap-1.5 font-medium mb-1">
-            <ArrowUpRight className="w-3.5 h-3.5 text-rose-400" />
+        <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-br from-rose-950/20 to-zinc-950/70 border border-rose-500/30">
+          <div className="text-[10px] sm:text-[11px] text-rose-300 flex items-center gap-1.5 font-medium mb-0.5 sm:mb-1">
+            <ArrowUpRight className="w-3.5 h-3.5 text-rose-400 shrink-0" />
             <span>전체 누적 성장</span>
           </div>
-          <div className={`text-base sm:text-lg font-bold font-mono ${totalGained >= 0 ? 'text-rose-400' : 'text-zinc-300'}`}>
+          <div className={`text-sm sm:text-lg font-bold font-mono ${totalGained >= 0 ? 'text-rose-400' : 'text-zinc-300'}`}>
             {totalGained >= 0 ? `+${totalGained.toLocaleString()}` : totalGained.toLocaleString()}명
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-0.5">
             {totalGained >= 0 ? `+${pctGained}% 성장` : `${pctGained}% 변동`}
           </div>
         </div>
 
         {/* 4. Days Recorded & Average Pace */}
-        <div className="p-3.5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
-          <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-1">
-            <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-            <span>기록 여정 / 일평균</span>
+        <div className="p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800/80">
+          <div className="text-[10px] sm:text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium mb-0.5 sm:mb-1">
+            <Calendar className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+            <span className="truncate">기록 여정 / 일평균</span>
           </div>
-          <div className="text-base sm:text-lg font-bold text-white font-mono">
+          <div className="text-sm sm:text-lg font-bold text-white font-mono">
             {calendarDays > recordCount ? `${calendarDays}일간 여정` : `총 ${recordCount}일치`}
           </div>
-          <div className="text-[11px] text-emerald-400 font-semibold mt-0.5">
-            일평균 +{avgDailyGain.toLocaleString()}명 페이스
-            {calendarDays > recordCount && (
-              <span className="text-[10px] text-zinc-400 font-normal ml-1">
-                ({recordCount}편 일지)
-              </span>
-            )}
+          <div className="text-[10px] sm:text-[11px] text-emerald-400 font-semibold mt-0.5 truncate">
+            일평균 +{avgDailyGain.toLocaleString()}명
           </div>
         </div>
       </div>
 
       {/* Main Interactive SVG Line Chart */}
       {!isCollapsed && chartData && (
-        <div className="relative pt-2 pb-1 z-10 animate-in fade-in duration-300">
+        <div className="relative pt-1 sm:pt-2 pb-1 z-10 animate-in fade-in duration-300">
           
           {/* Active Hover Detail Glass Box (Floating inside chart header) */}
           {activeHoverPoint ? (
-            <div className="mb-2 p-2.5 rounded-xl bg-zinc-900/90 border border-rose-500/40 text-xs flex items-center justify-between gap-4 animate-in fade-in duration-150 shadow-lg">
-              <div className="flex items-center gap-2.5">
-                <span className="text-lg">
+            <div className="mb-2.5 p-2.5 sm:p-3 rounded-xl bg-zinc-900/95 border border-rose-500/40 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 animate-in fade-in duration-150 shadow-lg">
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-lg shrink-0">
                   {activeHoverPoint.record.emotion ? activeHoverPoint.record.emotion.split(' ')[0] : '📝'}
                 </span>
-                <div>
-                  <span className="font-bold text-white mr-2">{activeHoverPoint.record.date}</span>
-                  <span className="text-zinc-400">구독자:</span>
-                  <strong className="text-amber-300 font-mono ml-1">{activeHoverPoint.record.todaySubs.toLocaleString()}명</strong>
-                  <span className="text-zinc-400 ml-2">구간 증감:</span>
+                <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5">
+                  <span className="font-bold text-white">{activeHoverPoint.record.date}</span>
+                  <span className="text-zinc-400 text-[11px]">구독자:</span>
+                  <strong className="text-amber-300 font-mono text-[11px] sm:text-xs">{activeHoverPoint.record.todaySubs.toLocaleString()}명</strong>
+                  <span className="text-zinc-400 text-[11px]">증감:</span>
                   {activeHoverPoint.record.isInitialBaseline ? (
-                    <strong className="text-emerald-400 font-mono ml-1">🚩 시작 기준점 (기준)</strong>
+                    <strong className="text-emerald-400 font-mono text-[11px]">🚩 시작 기준점</strong>
                   ) : (
-                    <strong className={`font-mono ml-1 ${(activeHoverPoint.record.subsGained || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    <strong className={`font-mono text-[11px] sm:text-xs ${(activeHoverPoint.record.subsGained || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {(activeHoverPoint.record.subsGained || 0) >= 0 ? `+${activeHoverPoint.record.subsGained.toLocaleString()}` : activeHoverPoint.record.subsGained.toLocaleString()}명
                       {activeHoverPoint.record.daysDiff && activeHoverPoint.record.daysDiff > 1 ? (
-                        <span className="text-zinc-400 font-normal font-sans text-[11px] ml-1">
-                          ({activeHoverPoint.record.daysDiff}일간, 일평균 +{activeHoverPoint.record.avgDailyGain?.toLocaleString()}명)
+                        <span className="text-zinc-400 font-normal font-sans text-[10px] ml-1">
+                          ({activeHoverPoint.record.daysDiff}일간 누적)
                         </span>
                       ) : (
-                        <span className="text-zinc-400 font-normal font-sans text-[11px] ml-1">
-                          (어제 대비)
+                        <span className="text-zinc-400 font-normal font-sans text-[10px] ml-1">
+                          (전일비)
                         </span>
                       )}
                     </strong>
@@ -356,19 +351,22 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
                 </div>
               </div>
               {activeHoverPoint.record.uploadedVideoTitle && (
-                <div className="hidden md:block text-[11px] text-zinc-400 truncate max-w-xs">
+                <div className="text-[10px] sm:text-[11px] text-zinc-400 truncate max-w-xs pl-6 sm:pl-0">
                   🎬 {activeHoverPoint.record.uploadedVideoTitle}
                 </div>
               )}
             </div>
           ) : (
-            <div className="mb-2 text-right text-[11px] text-zinc-500">
-              * 그래프 선의 각 날짜 점 위에 마우스를 올리면 그날의 상세 일지와 기록을 볼 수 있습니다.
+            <div className="mb-2 flex items-center justify-between text-[11px] text-zinc-500">
+              <span className="hidden sm:inline">* 그래프 선의 각 날짜 점 위에 마우스를 올리면 그날의 상세 일지와 기록을 볼 수 있습니다.</span>
+              <span className="sm:hidden text-zinc-400 flex items-center gap-1">
+                <span>👈👉 좌우로 스크롤하여 날짜별 포인트를 탭하세요</span>
+              </span>
             </div>
           )}
 
-          {/* SVG Canvas */}
-          <div className="w-full overflow-x-auto">
+          {/* SVG Canvas Container with Smooth Touch Scroll */}
+          <div className="w-full overflow-x-auto touch-pan-x no-scrollbar pb-1">
             <svg
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
               className="w-full h-auto min-w-[620px] select-none"
@@ -462,10 +460,14 @@ export const GrowthTrendChart: React.FC<GrowthTrendChartProps> = ({
                     className="cursor-pointer"
                     onMouseEnter={() => setHoveredIndex(i)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    onClick={() => onSelectDate && onSelectDate(pt.record.date)}
+                    onTouchStart={() => setHoveredIndex(i)}
+                    onClick={() => {
+                      setHoveredIndex(i);
+                      if (onSelectDate) onSelectDate(pt.record.date);
+                    }}
                   >
-                    {/* Invisible larger hover hit area */}
-                    <circle cx={pt.x} cy={pt.y} r="14" fill="transparent" />
+                    {/* Invisible larger touch hit area */}
+                    <circle cx={pt.x} cy={pt.y} r="18" fill="transparent" />
 
                     {/* Outer ring for first/last/hovered */}
                     {(isFirst || isLast || isHovered) && (

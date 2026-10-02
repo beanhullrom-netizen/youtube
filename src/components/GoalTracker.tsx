@@ -296,7 +296,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
         </div>
 
         {showSubMilestones && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 animate-in fade-in duration-200">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 animate-in fade-in duration-200">
             {SUB_MILESTONES.map((milestone) => {
               const isCompleted = currentSubs >= milestone.target;
               const isCurrentTarget = !isCompleted && nextMilestone.target === milestone.target;
@@ -326,24 +326,24 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                       setSelectedCelebration(milestone);
                     }
                   }}
-                  className={`p-3.5 rounded-2xl border transition-all duration-300 flex flex-col justify-between relative overflow-hidden select-none ${isCompleted ? 'cursor-pointer' : 'cursor-default'} ${cardClass}`}
+                  className={`p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border transition-all duration-300 flex flex-col justify-between relative overflow-hidden select-none ${isCompleted ? 'cursor-pointer' : 'cursor-default'} ${cardClass}`}
                 >
                   {/* Subtle sheen on cards */}
                   <div className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-sheen pointer-events-none" />
 
                   {/* Top: Badge & Status */}
-                  <div className="flex items-center justify-between gap-1 mb-2 relative z-10">
-                    <span className="text-[11px] font-bold text-zinc-300 truncate">
+                  <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2 relative z-10">
+                    <span className="text-[10px] sm:text-[11px] font-bold text-zinc-300 truncate">
                       {milestone.badge}
                     </span>
 
                     {isCompleted ? (
-                      <span className="flex items-center gap-0.5 text-[10px] font-extrabold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded-md">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span className="flex items-center gap-0.5 text-[9px] sm:text-[10px] font-extrabold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded-md">
+                        <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         달성
                       </span>
                     ) : isCurrentTarget ? (
-                      <span className="flex items-center gap-1 text-[10px] font-extrabold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded-md shadow-sm">
+                      <span className="flex items-center gap-1 text-[9px] sm:text-[10px] font-extrabold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded-md shadow-sm">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
@@ -356,16 +356,16 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                   </div>
 
                   {/* Center: Milestone Target */}
-                  <div className="my-1 relative z-10">
-                    <div className="text-base font-black text-white font-mono tracking-tight flex items-center gap-1.5">
+                  <div className="my-0.5 sm:my-1 relative z-10">
+                    <div className="text-sm sm:text-base font-black text-white font-mono tracking-tight flex items-center gap-1">
                       <span>{milestone.label}</span>
                       {isCurrentTarget && (
-                        <Sparkles className="w-3 h-3 text-amber-400 animate-float-sparkle" />
+                        <Sparkles className="w-3 h-3 text-amber-400 animate-float-sparkle shrink-0" />
                       )}
                     </div>
-                    <div className="text-[10px] text-zinc-400 mt-0.5 truncate">
+                    <div className="text-[9px] sm:text-[10px] text-zinc-400 mt-0.5 truncate">
                       {isCompleted ? (
-                        <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                        <span className="text-emerald-400 font-semibold flex items-center gap-0.5">
                           <span>정복 완료 🏆</span>
                         </span>
                       ) : (
@@ -377,7 +377,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                   </div>
 
                   {/* Bottom: Progress Bar */}
-                  <div className="w-full bg-zinc-900/90 rounded-full h-1.5 mt-2.5 overflow-hidden border border-zinc-800/80 relative z-10">
+                  <div className="w-full bg-zinc-900/90 rounded-full h-1.5 mt-2 sm:mt-2.5 overflow-hidden border border-zinc-800/80 relative z-10">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ease-out ${milestone.progressGradient}`}
                       style={{ width: `${subPct}%` }}
@@ -393,11 +393,11 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                         setIsReplayMode(true);
                         setSelectedCelebration(milestone);
                       }}
-                      className="mt-2.5 w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/35 hover:to-orange-500/35 border border-amber-500/40 hover:border-amber-400/60 text-amber-300 font-bold text-[11px] flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer relative z-10"
+                      className="mt-2 sm:mt-2.5 w-full py-1.5 px-1 sm:px-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/35 hover:to-orange-500/35 border border-amber-500/40 hover:border-amber-400/60 text-amber-300 font-bold text-[10px] sm:text-[11px] flex items-center justify-center gap-1 transition-all shadow-sm active:scale-95 cursor-pointer relative z-10"
                       title="달성 컷신 다시 보기"
                     >
-                      <PartyPopper className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
-                      <span>🎬 컷신 다시 보기</span>
+                      <PartyPopper className="w-3 h-3 text-amber-400 animate-bounce shrink-0" />
+                      <span>🎬 다시 보기</span>
                     </button>
                   )}
                 </div>
@@ -409,19 +409,19 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
 
       {/* 📮 10만 실버버튼 타임캡슐 섹션 (10만 찍기 전 절대 열람 불가) */}
       {!timeCapsule || !timeCapsule.isSealed ? (
-          <div className="mt-3.5 p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex-shrink-0">
+          <div className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 shrink-0 mt-0.5 sm:mt-0">
                 <Mail className="w-4 h-4" />
               </div>
-              <div>
-                <div className="font-bold text-zinc-200 flex items-center gap-2">
-                  <span>📮 10만 실버버튼 타임캡슐</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-semibold">
+              <div className="min-w-0">
+                <div className="font-bold text-zinc-200 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-xs sm:text-sm">📮 10만 실버버튼 타임캡슐</span>
+                  <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-semibold">
                     10만 돌파 시 자동 개봉
                   </span>
                 </div>
-                <p className="text-zinc-400 text-[11px] mt-0.5">
+                <p className="text-zinc-400 text-[10px] sm:text-[11px] mt-0.5 leading-relaxed">
                   100,000명을 달성할 미래의 나에게 편지를 봉인해보세요. 10만을 실제로 찍기 전까지는 절대로 열어볼 수 없습니다.
                 </p>
               </div>
@@ -429,7 +429,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
             <button
               type="button"
               onClick={() => setIsCapsuleModalOpen(true)}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-700 hover:from-zinc-700 hover:to-zinc-600 text-white border border-zinc-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 flex-shrink-0 shadow-sm cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-700 hover:from-zinc-700 hover:to-zinc-600 text-white border border-zinc-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 shrink-0 shadow-sm cursor-pointer whitespace-nowrap"
             >
               <Lock className="w-3.5 h-3.5 text-amber-400" />
               <span>타임캡슐 작성 및 봉인</span>
@@ -439,23 +439,23 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
           /* 10만 달성 전: 굳게 닫힌 왁스 실링 절대 봉인 카드 */
           <div 
             onClick={() => setIsCapsuleModalOpen(true)}
-            className="mt-3.5 p-4 rounded-2xl bg-gradient-to-r from-rose-950/25 via-zinc-950/90 to-zinc-950/90 border border-rose-500/30 hover:border-rose-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs transition-all cursor-pointer group shadow-sm"
+            className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-rose-950/25 via-zinc-950/90 to-zinc-950/90 border border-rose-500/30 hover:border-rose-500/50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs transition-all cursor-pointer group shadow-sm"
             title="10만 달성 전까지 절대 열람할 수 없습니다"
           >
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex-shrink-0 group-hover:scale-105 transition-transform">
+            <div className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shrink-0 group-hover:scale-105 transition-transform mt-0.5 sm:mt-0">
                 <Lock className="w-4 h-4 text-rose-400 animate-pulse" />
               </div>
-              <div>
-                <div className="font-bold text-zinc-200 flex items-center gap-2">
-                  <span>📮 10만 실버버튼 타임캡슐</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 font-extrabold flex items-center gap-1">
+              <div className="min-w-0">
+                <div className="font-bold text-zinc-200 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-xs sm:text-sm">📮 10만 실버버튼 타임캡슐</span>
+                  <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 font-extrabold flex items-center gap-1">
                     <Lock className="w-2.5 h-2.5" /> 절대 봉인 중
                   </span>
                 </div>
-                <p className="text-zinc-400 text-[11px] mt-0.5">
+                <p className="text-zinc-400 text-[10px] sm:text-[11px] mt-0.5 leading-relaxed">
                   봉인 시점: {timeCapsule.writtenAt} ({timeCapsule.writtenSubs.toLocaleString()}명 시절) • 
-                  <strong className="text-rose-400 font-normal"> 10만 달성 전까지 절대 열람 불가 (남은 {(100000 - currentSubs).toLocaleString()}명)</strong>
+                  <strong className="text-rose-400 font-normal"> 남은 {(100000 - currentSubs).toLocaleString()}명</strong>
                 </p>
               </div>
             </div>
@@ -465,7 +465,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                 e.stopPropagation();
                 setIsCapsuleModalOpen(true);
               }}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-zinc-900/90 group-hover:bg-zinc-800 text-zinc-300 group-hover:text-white border border-zinc-800 group-hover:border-zinc-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-all flex-shrink-0 cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-zinc-900/90 group-hover:bg-zinc-800 text-zinc-300 group-hover:text-white border border-zinc-800 group-hover:border-zinc-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shrink-0 cursor-pointer whitespace-nowrap"
             >
               <Lock className="w-3.5 h-3.5 text-rose-400" />
               <span>🔒 봉인 상태 확인</span>
@@ -475,21 +475,21 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
           /* 10만 달성 완료: 영광의 봉인 해제 카드 */
           <div 
             onClick={() => setIsCapsuleModalOpen(true)}
-            className="mt-3.5 p-4 rounded-2xl bg-gradient-to-r from-amber-950/30 via-zinc-950/90 to-zinc-950/90 border-2 border-amber-500/50 hover:border-amber-400 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs transition-all cursor-pointer shadow-lg shadow-amber-500/10 group"
+            className="mt-3.5 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-950/30 via-zinc-950/90 to-zinc-950/90 border-2 border-amber-500/50 hover:border-amber-400 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs transition-all cursor-pointer shadow-lg shadow-amber-500/10 group"
             title="10만 실버버튼 타임캡슐 개봉"
           >
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 flex-shrink-0 animate-bounce">
+            <div className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 shrink-0 animate-bounce mt-0.5 sm:mt-0">
                 <Mail className="w-4 h-4 text-amber-300" />
               </div>
-              <div>
-                <div className="font-bold text-amber-200 flex items-center gap-2">
-                  <span>📮 10만 실버버튼 타임캡슐</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-extrabold flex items-center gap-1">
+              <div className="min-w-0">
+                <div className="font-bold text-amber-200 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-xs sm:text-sm">📮 10만 실버버튼 타임캡슐</span>
+                  <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-extrabold flex items-center gap-1">
                     <CheckCircle2 className="w-2.5 h-2.5" /> 봉인 해제 완료!
                   </span>
                 </div>
-                <p className="text-zinc-300 text-[11px] mt-0.5">
+                <p className="text-zinc-300 text-[10px] sm:text-[11px] mt-0.5 leading-relaxed">
                   {timeCapsule.writtenSubs.toLocaleString()}명 시절 과거의 내가 보낸 편지가 도착했습니다!
                 </p>
               </div>
@@ -500,7 +500,7 @@ export const GoalTracker: React.FC<GoalTrackerProps> = ({
                 e.stopPropagation();
                 setIsCapsuleModalOpen(true);
               }}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-zinc-950 font-black text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>📜 타임캡슐 편지 읽기</span>

@@ -301,70 +301,70 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
     <div className="space-y-6">
       
       {/* 1. 오늘의 일지 작성기 카드 */}
-      <div className="bg-gradient-to-b from-zinc-900/95 via-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-b from-zinc-900/95 via-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-36 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Form Title & Top Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-zinc-800/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-zinc-800/80">
           <div>
             <div className="flex items-center gap-2">
-              <span className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
-                <Edit3 className="w-5 h-5" />
+              <span className="p-1.5 sm:p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 shrink-0">
+                <Edit3 className="w-4 h-4 sm:w-5 sm:h-5" />
               </span>
-              <h2 className="text-lg font-bold text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
                 크리에이터 데일리 일지 작성
               </h2>
             </div>
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 sm:mt-1">
               오늘의 구독자 수, 나의 감정 상태, 그리고 오늘 하루의 솔직한 생각과 회고를 기록합니다.
             </p>
           </div>
 
           {/* Quick Date Stepper Navigation & Emotion Calendar Launcher */}
-          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          <div className="flex items-center justify-between sm:justify-start gap-1.5 sm:gap-2 flex-wrap w-full sm:w-auto">
             {onOpenEmotionCalendar && (
               <button
                 type="button"
                 onClick={onOpenEmotionCalendar}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 text-[11px] sm:text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
                 title="월간 감정 캘린더 모달 열기"
               >
-                <Smile className="w-4 h-4 text-purple-400" />
-                <span>월간 감정 캘린더</span>
+                <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400 shrink-0" />
+                <span className="whitespace-nowrap">감정 달력</span>
               </button>
             )}
 
-            <div className="flex items-center gap-1.5 bg-zinc-950/80 border border-zinc-800 rounded-2xl p-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 bg-zinc-950/80 border border-zinc-800 rounded-xl sm:rounded-2xl p-1 sm:p-1.5">
               <button
                 type="button"
                 onClick={() => changeDateByDays(-1)}
-                className="p-1.5 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1 sm:p-1.5 hover:bg-zinc-800 rounded-lg sm:rounded-xl text-zinc-400 hover:text-white transition-colors cursor-pointer"
                 title="어제 날짜로 이동"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="bg-transparent text-xs font-semibold text-white px-2 py-1 focus:outline-none border-0 cursor-pointer"
+                className="bg-transparent text-[11px] sm:text-xs font-semibold text-white px-1 sm:px-2 py-0.5 sm:py-1 focus:outline-none border-0 cursor-pointer max-w-[115px] sm:max-w-none"
               />
 
               <button
                 type="button"
                 onClick={() => changeDateByDays(1)}
-                className="p-1.5 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="p-1 sm:p-1.5 hover:bg-zinc-800 rounded-lg sm:rounded-xl text-zinc-400 hover:text-white transition-colors cursor-pointer"
                 title="내일 날짜로 이동"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
 
               {selectedDate !== getTodayStr() && (
                 <button
                   type="button"
                   onClick={handleSetToday}
-                  className="text-[11px] font-bold px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg ml-1 transition-colors cursor-pointer"
+                  className="text-[10px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-md sm:rounded-lg ml-0.5 sm:ml-1 transition-colors cursor-pointer whitespace-nowrap"
                 >
                   오늘로
                 </button>
@@ -374,23 +374,23 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
         </div>
 
         {/* Main Editor Form */}
-        <form onSubmit={handleSaveJournal} className="mt-6 space-y-6">
+        <form onSubmit={handleSaveJournal} className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
           
           {/* Row 1: Subscriber Count & Live Net Gain */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             
             {/* Today Subs Input */}
-            <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-2">
+              <div className="flex items-center justify-between flex-wrap gap-1">
                 <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-red-400" />
+                  <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
                   <span>오늘 구독자 수</span>
                   <span className="text-red-400">*</span>
                 </label>
-                <span className="text-[11px] text-zinc-400">
+                <span className="text-[10px] sm:text-[11px] text-zinc-400">
                   {previousRecordForDate ? (
                     <>
-                      직전({previousRecordForDate.date}): <strong>{previousRecordForDate.todaySubs.toLocaleString()}명</strong>
+                      직전({previousRecordForDate.date}): <strong className="text-zinc-200">{previousRecordForDate.todaySubs.toLocaleString()}명</strong>
                     </>
                   ) : (
                     <span className="text-emerald-400 font-semibold">🚩 최초 기록 기준점</span>
@@ -398,29 +398,32 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="relative flex-1">
                   <input
                     type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min="0"
                     value={todaySubs || ''}
                     onChange={(e) => setTodaySubs(Number(e.target.value))}
                     required
                     placeholder="예: 87300"
-                    className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3.5 py-2.5 text-base font-bold text-white font-mono focus:outline-none focus:border-red-500 transition-colors"
+                    className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 text-sm sm:text-base font-bold text-white font-mono focus:outline-none focus:border-red-500 transition-colors"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-zinc-400">
+                  <span className="absolute right-3 sm:right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-zinc-400">
                     명
                   </span>
                 </div>
 
                 {/* Quick Add Sub Buttons */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   {[10, 50, 100].map((num) => (
                     <button
                       key={num}
                       type="button"
                       onClick={() => setTodaySubs((prev) => (prev || 0) + num)}
-                      className="text-[11px] font-semibold px-2 py-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
+                      className="text-[10px] sm:text-[11px] font-semibold px-2 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition-colors cursor-pointer"
                     >
                       +{num}
                     </button>
@@ -429,15 +432,15 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
               </div>
 
               {/* Net Gain Status Pill */}
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-[11px] text-zinc-400">
+              <div className="flex items-center justify-between pt-0.5 sm:pt-1 flex-wrap gap-1">
+                <span className="text-[10px] sm:text-[11px] text-zinc-400">
                   {isDateBaseline
                     ? '기준점 구분:'
                     : daysDiffForDate > 1
-                      ? `늘어난 구독자 (${daysDiffForDate}일간 누적):`
+                      ? `늘어난 구독자 (${daysDiffForDate}일간):`
                       : '늘어난 구독자 (전일 대비):'}
                 </span>
-                <span className={`text-xs font-bold flex items-center gap-1 ${
+                <span className={`text-[11px] sm:text-xs font-bold flex items-center gap-1 ${
                   isDateBaseline
                     ? 'text-emerald-400'
                     : liveNetGain >= 0 ? 'text-emerald-400' : 'text-rose-400'
@@ -446,20 +449,20 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                     <span>🚩 시작 기준점 (순증 0)</span>
                   ) : liveNetGain >= 0 ? (
                     <>
-                      <TrendingUp className="w-3.5 h-3.5" />
+                      <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       <span>+{liveNetGain.toLocaleString()}명</span>
                       {daysDiffForDate > 1 && (
-                        <span className="text-[10px] text-zinc-400 font-normal ml-1">
+                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-sans ml-1">
                           (일평균 +{liveAvgGain.toLocaleString()}명)
                         </span>
                       )}
                     </>
                   ) : (
                     <>
-                      <TrendingDown className="w-3.5 h-3.5" />
+                      <TrendingDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       <span>{liveNetGain.toLocaleString()}명</span>
                       {daysDiffForDate > 1 && (
-                        <span className="text-[10px] text-zinc-400 font-normal ml-1">
+                        <span className="text-[9px] sm:text-[10px] text-zinc-400 font-normal font-sans ml-1">
                           (일평균 {liveAvgGain.toLocaleString()}명)
                         </span>
                       )}
@@ -470,9 +473,9 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
             </div>
 
             {/* Optional Topic or Video Title */}
-            <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-2">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-1.5 sm:space-y-2">
               <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                <Film className="w-4 h-4 text-amber-400" />
+                <Film className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
                 <span>오늘 다룬 주제 / 영상 제목 (선택)</span>
               </label>
               <input
@@ -480,29 +483,29 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                 value={videoTitle}
                 onChange={(e) => setVideoTitle(e.target.value)}
                 placeholder="예: 신규 기획 영상 업로드 완료 / 쇼츠 대본 작성"
-                className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-700/80 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
               />
-              <p className="text-[11px] text-zinc-500">
-                오늘 채널을 위해 작업한 영상이나 주요 작업 내용을 남겨두면 나중에 성장을 회고할 때 큰 도움이 됩니다.
+              <p className="text-[10px] sm:text-[11px] text-zinc-500 leading-relaxed">
+                오늘 작업한 영상이나 주요 기획 내용을 남겨두면 나중에 성장을 회고할 때 큰 도움이 됩니다.
               </p>
             </div>
           </div>
 
           {/* Row 2: Today's Emotion Selector */}
-          <div className="p-4.5 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-2.5 sm:space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-1">
               <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                <Smile className="w-4 h-4 text-emerald-400" />
+                <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                 <span>오늘 나의 감정 상태</span>
                 <span className="text-red-400">*</span>
               </label>
-              <span className="text-[11px] text-zinc-400">
-                선택된 감정: <strong className="text-zinc-200">{selectedEmotion === 'custom' ? (customEmotion || '직접 입력') : selectedEmotion}</strong>
+              <span className="text-[10px] sm:text-[11px] text-zinc-400 truncate max-w-[200px] sm:max-w-none">
+                선택: <strong className="text-zinc-200">{selectedEmotion === 'custom' ? (customEmotion || '직접 입력') : selectedEmotion}</strong>
               </span>
             </div>
 
             {/* Emotion Preset Chips */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {EMOTION_PRESETS.map((preset) => {
                 const isSelected = selectedEmotion === `${preset.emoji} ${preset.label}`;
                 return (
@@ -513,7 +516,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                       setSelectedEmotion(`${preset.emoji} ${preset.label}`);
                       setCustomEmotion('');
                     }}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all active:scale-95 cursor-pointer ${
+                    className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-[11px] sm:text-xs font-medium transition-all active:scale-95 cursor-pointer ${
                       isSelected ? preset.activeClass : preset.badgeClass
                     }`}
                   >
@@ -527,7 +530,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedEmotion('custom')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
+                className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-[11px] sm:text-xs font-medium transition-all cursor-pointer ${
                   selectedEmotion === 'custom' 
                     ? 'bg-zinc-700 text-white border-zinc-500' 
                     : 'bg-zinc-800/40 text-zinc-400 border-zinc-700 hover:bg-zinc-800'
@@ -539,7 +542,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
 
             {/* Custom Emotion Input if selected */}
             {selectedEmotion === 'custom' && (
-              <div className="pt-2 animate-in fade-in duration-150">
+              <div className="pt-1.5 sm:pt-2 animate-in fade-in duration-150">
                 <input
                   type="text"
                   value={customEmotion}
@@ -552,14 +555,14 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
           </div>
 
           {/* Row 3: Daily Journal Textarea */}
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-red-400" />
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
                 <span>오늘의 일지 & 한마디 회고</span>
                 <span className="text-red-400">*</span>
               </label>
-              <span className="text-[11px] text-zinc-500 font-mono">
+              <span className="text-[10px] sm:text-[11px] text-zinc-500 font-mono">
                 {noteContent.length}자 작성 중
               </span>
             </div>
@@ -569,18 +572,18 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               placeholder="오늘 유튜브 채널을 운영하며 어떤 감정을 느꼈나요? 댓글 반응, 조회수 변화, 겪었던 고민이나 내일 꼭 해보고 싶은 시도를 솔직하게 적어보세요."
-              className="w-full bg-zinc-950/80 border border-zinc-800 focus:border-red-500/80 rounded-2xl p-4 text-xs sm:text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors leading-relaxed resize-y"
+              className="w-full bg-zinc-950/80 border border-zinc-800 focus:border-red-500/80 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-xs sm:text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors leading-relaxed resize-y min-h-[100px]"
             />
           </div>
 
           {/* Bottom Save Action */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="text-xs text-zinc-400">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+            <div className="text-[11px] sm:text-xs text-zinc-400 text-center sm:text-left">
               <span>기록 기준일: </span>
               <strong className="text-white">{formatReadableDate(selectedDate)}</strong>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
               {isSavedFeedback && (
                 <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 animate-in fade-in duration-200">
                   <Check className="w-4 h-4" />
@@ -590,7 +593,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
 
               <button
                 type="submit"
-                className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-red-600/30 transition-all active:scale-95 cursor-pointer"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs sm:text-sm px-6 py-3 sm:py-2.5 rounded-xl shadow-lg shadow-red-600/30 transition-all active:scale-95 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>일지 저장하기</span>
@@ -601,19 +604,19 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
       </div>
 
       {/* 2. 지난 일지 모아보기 / 타임라인 피드 */}
-      <div className="bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-xl space-y-5">
+      <div className="bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl space-y-4 sm:space-y-5">
         
         {/* Feed Header & Filters */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-zinc-800">
           <div>
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
               <Calendar className="w-4 h-4 text-zinc-400" />
               <span>크리에이터 일지 히스토리</span>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
-                총 {records.length}일의 기록
+              <span className="text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
+                총 {records.length}일
               </span>
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5">
               과거의 일지 카드를 누르면 해당 날짜로 바로 이동하여 수정할 수 있습니다.
             </p>
           </div>
@@ -626,23 +629,23 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="일지 내용, 날짜 검색..."
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-8 pr-3 py-2 sm:py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-red-500"
             />
           </div>
         </div>
 
-        {/* Emotion Quick Filter */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
+        {/* Emotion Quick Filter with Touch Scroll */}
+        <div className="flex items-center gap-1.5 overflow-x-auto touch-pan-x pb-1 text-xs no-scrollbar">
           <button
             type="button"
             onClick={() => setEmotionFilter('all')}
-            className={`px-3 py-1 rounded-xl font-medium transition-colors cursor-pointer shrink-0 ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1 rounded-xl font-medium transition-colors cursor-pointer shrink-0 text-[11px] sm:text-xs ${
               emotionFilter === 'all' 
                 ? 'bg-zinc-200 text-black font-bold' 
                 : 'bg-zinc-800/60 text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            전체 보기 ({records.length})
+            전체 ({records.length})
           </button>
           {EMOTION_PRESETS.map((preset) => {
             const count = records.filter(r => r.emotion && r.emotion.includes(preset.label)).length;
@@ -652,9 +655,9 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                 key={preset.id}
                 type="button"
                 onClick={() => setEmotionFilter(preset.label)}
-                className={`px-3 py-1 rounded-xl font-medium transition-colors cursor-pointer shrink-0 flex items-center gap-1 ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1 rounded-xl font-medium transition-colors cursor-pointer shrink-0 flex items-center gap-1 text-[11px] sm:text-xs ${
                   emotionFilter === preset.label
-                    ? 'bg-zinc-200 text-black font-bold'
+                    ? 'bg-zinc-200 text-black font-bold' 
                     : 'bg-zinc-800/60 text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -668,11 +671,11 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
 
         {/* Timeline Cards Grid */}
         {timelineRecords.length === 0 ? (
-          <div className="p-8 text-center text-zinc-500 text-xs">
+          <div className="p-6 sm:p-8 text-center text-zinc-500 text-xs">
             검색 결과 또는 저장된 일지가 없습니다.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {timelineRecords.map((record) => {
               const isSelected = record.date === selectedDate;
               const gainInfo = formatRecordGainInfo(record);
@@ -681,7 +684,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                 <div
                   key={record.id}
                   onClick={() => setSelectedDate(record.date)}
-                  className={`group relative p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                  className={`group relative p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected 
                       ? 'bg-zinc-850/90 border-red-500/60 ring-1 ring-red-500/40 shadow-lg shadow-red-500/10' 
                       : 'bg-zinc-950/70 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/50'
@@ -689,25 +692,25 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                 >
                   {/* Top Bar: Date & Emotion */}
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-2.5">
+                    <div className="flex items-start sm:items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-xs font-bold text-white font-mono">
                           {record.date}
                         </span>
                         {record.emotion && (
-                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-zinc-800/90 text-zinc-300 border border-zinc-700/60">
+                          <span className="text-[10px] sm:text-[11px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-lg bg-zinc-800/90 text-zinc-300 border border-zinc-700/60">
                             {record.emotion}
                           </span>
                         )}
                         {/* Gap tag if 2 or more days gap */}
                         {gainInfo.tag && (
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                          <span className="text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
                             {gainInfo.tag}
                           </span>
                         )}
                         {/* Baseline tag if earliest entry */}
                         {gainInfo.isBaseline && (
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                          <span className="text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
                             🚩 기록 시작점
                           </span>
                         )}
@@ -716,23 +719,23 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                       {/* Subs & Net Gain Tag */}
                       <div className="flex flex-col items-end gap-0.5 text-xs font-mono shrink-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-white">
+                          <span className="font-bold text-white text-xs sm:text-sm">
                             {record.todaySubs.toLocaleString()}명
                           </span>
                           {!gainInfo.isBaseline ? (
-                            <span className={`text-[11px] font-bold ${
+                            <span className={`text-[10px] sm:text-[11px] font-bold ${
                               gainInfo.isPositive ? 'text-emerald-400' : 'text-rose-400'
                             }`}>
                               {gainInfo.gainBadgeText}
                             </span>
                           ) : (
-                            <span className="text-[10px] text-zinc-400 bg-zinc-800/80 px-1.5 py-0.5 rounded font-sans">
+                            <span className="text-[9px] sm:text-[10px] text-zinc-400 bg-zinc-800/80 px-1.5 py-0.5 rounded font-sans">
                               시작 기준
                             </span>
                           )}
                         </div>
                         {gainInfo.subText && (
-                          <span className="text-[10px] text-zinc-400 font-sans">
+                          <span className="text-[9px] sm:text-[10px] text-zinc-400 font-sans">
                             {gainInfo.subText}
                           </span>
                         )}
@@ -741,7 +744,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
 
                     {/* Video Title Tag if exists */}
                     {record.uploadedVideoTitle && (
-                      <div className="text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl mb-2 flex items-center gap-1.5 truncate">
+                      <div className="text-[10px] sm:text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-xl mb-2 flex items-center gap-1.5 truncate">
                         <Film className="w-3 h-3 shrink-0 text-amber-400" />
                         <span className="truncate">{record.uploadedVideoTitle}</span>
                       </div>
@@ -754,8 +757,8 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                   </div>
 
                   {/* Card Bottom: Edit / Delete */}
-                  <div className="flex items-center justify-between pt-3 mt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500">
-                    <span className="text-[10px]">
+                  <div className="flex items-center justify-between pt-2.5 mt-2 border-t border-zinc-800/60 text-[10px] sm:text-[11px] text-zinc-500">
+                    <span>
                       {isSelected ? '현재 수정 중인 일지' : '클릭하여 일지 불러오기'}
                     </span>
 
@@ -765,9 +768,14 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedDate(record.date);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const el = document.getElementById('journal-section');
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth' });
+                          } else {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }
                         }}
-                        className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
                         title="일지 수정하기"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -782,7 +790,7 @@ export const CreatorJournal: React.FC<CreatorJournalProps> = ({
                               onDeleteRecord(record.id);
                             }
                           }}
-                          className="p-1 rounded-lg hover:bg-rose-950/40 text-zinc-500 hover:text-rose-400 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-rose-950/40 text-zinc-500 hover:text-rose-400 transition-colors"
                           title="일지 삭제하기"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
